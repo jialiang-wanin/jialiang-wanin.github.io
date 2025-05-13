@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>GTM 測試站</title>
+
+  <!-- ✅ GTM Head 程式碼位置（請用你的 GTM ID 取代 GTM-XXXXXX） -->
+  <script>
+    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+    })(window,document,'script','dataLayer','GTM-XXXXXX');  <!-- ← 換成你的 ID -->
+  </script>
+
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding-top: 50px;
+    }
+
+    button, a {
+      padding: 12px 24px;
+      margin: 16px;
+      font-size: 16px;
+      display: inline-block;
+      cursor: pointer;
+      text-decoration: none;
+    }
+
+    .popup {
+      display: none;
+      margin-top: 20px;
+      padding: 20px;
+      background: #eee;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ✅ GTM Body 程式碼位置 -->
+  <noscript>
+    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXX"
+    height="0" width="0" style="display:none;visibility:hidden"></iframe>
+  </noscript>
+
+  <h1>GTM 測試站</h1>
+
+  <button id="test-button">點我送出事件</button>
+  <a href="https://www.google.com" target="_blank" id="test-link">前往 Google</a>
+
+  <button onclick="showPopup()">打開彈窗</button>
+  <div class="popup" id="popup">🎉 這是一個彈窗</div>
+
+  <script>
+    function showPopup() {
+      const popup = document.getElementById('popup');
+      popup.style.display = 'block';
+      // 模擬彈窗出現事件（可用來測試「元素可見」觸發器）
+    }
+  </script>
+</body>
+</html>
