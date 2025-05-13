@@ -1,18 +1,22 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>GTM 測試站</title>
 
   <!-- ✅ GTM Head 程式碼位置（請用你的 GTM ID 取代 GTM-XXXXXX） -->
-  <script>
-    (function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-    new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-    j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-    'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-    })(window,document,'script','dataLayer','GTM-XXXXXX');  <!-- ← 換成你的 ID -->
-  </script>
+  <!-- Google Tag Manager -->
+  <script>(function (w, d, s, l, i) {
+      w[l] = w[l] || []; w[l].push({
+        'gtm.start':
+          new Date().getTime(), event: 'gtm.js'
+      }); var f = d.getElementsByTagName(s)[0],
+        j = d.createElement(s), dl = l != 'dataLayer' ? '&l=' + l : ''; j.async = true; j.src =
+          'https://www.googletagmanager.com/gtm.js?id=' + i + dl; f.parentNode.insertBefore(j, f);
+    })(window, document, 'script', 'dataLayer', 'GTM-P5D3RW5F');</script>
+  <!-- End Google Tag Manager -->
 
   <style>
     body {
@@ -21,7 +25,8 @@
       padding-top: 50px;
     }
 
-    button, a {
+    button,
+    a {
       padding: 12px 24px;
       margin: 16px;
       font-size: 16px;
@@ -38,13 +43,14 @@
     }
   </style>
 </head>
+
 <body>
 
   <!-- ✅ GTM Body 程式碼位置 -->
-  <noscript>
-    <iframe src="https://www.googletagmanager.com/ns.html?id=GTM-XXXXXX"
-    height="0" width="0" style="display:none;visibility:hidden"></iframe>
-  </noscript>
+  <!-- Google Tag Manager (noscript) -->
+  <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-P5D3RW5F" height="0" width="0"
+      style="display:none;visibility:hidden"></iframe></noscript>
+  <!-- End Google Tag Manager (noscript) -->
 
   <h1>GTM 測試站</h1>
 
@@ -62,4 +68,5 @@
     }
   </script>
 </body>
+
 </html>
