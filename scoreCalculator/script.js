@@ -81,6 +81,9 @@ function calculateScore() {
     }
 
     const communicationComplexity = unitNames.length;
+    if (communicationComplexity == 1 || communicationComplexity == 2) {
+        communicationComplexity == 1
+    }
     console.log(`有效單位數量：${communicationComplexity}`);
     console.log(`單位名稱：${unitNames.join(', ')}`);
     totalComplexity += communicationComplexity;
@@ -119,7 +122,7 @@ function calculateScore() {
     // 額外複雜度判定
     const extraComplexity = parseInt(document.getElementById('extraComplexity').value) || 0;
     const extraComplexityReason = document.getElementById('extraComplexityReason').value.trim();
-      // 檢查邏輯：如果有填複雜度但沒填原因
+    // 檢查邏輯：如果有填複雜度但沒填原因
     if (extraComplexity > 0 && extraComplexityReason === '') {
         alert('請填寫額外複雜度的原因');
         document.getElementById('extraComplexityReason').focus();
