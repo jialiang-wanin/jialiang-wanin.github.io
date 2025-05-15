@@ -14,8 +14,34 @@ function getComplexityScore(level) {
     else return 1.1 + (level - 10) * 0.2; // 10+ 的複雜度，每級+0.2
 }
 
+const MAX_UNITS = 5;
+
+function addUnit() {
+    const container = document.getElementById('unitContainer');
+    const currentUnits = container.querySelectorAll('.unit-input').length;
+
+    if (currentUnits >= MAX_UNITS) {
+        alert('最多只能新增 5 個單位');
+        return;
+    }
+
+    const newInput = document.createElement('div');
+    newInput.classList.add('unit-input');
+    newInput.innerHTML = `
+        <input type="text" class="unit-name" placeholder="請輸入單位名稱">
+        <button type="button" class="remove-unit" onclick="removeUnit(this)">刪除</button>
+    `;
+    container.appendChild(newInput);
+}
+
+function removeUnit(button) {
+    const container = document.getElementById('unitContainer');
+    container.removeChild(button.parentElement);
+}
+
 function calculateScore() {
     // 獲取專案名稱
+
     const projectName = document.getElementById('projectName').value.trim();
     if (!projectName) {
         alert('請輸入專案名稱');
@@ -37,7 +63,26 @@ function calculateScore() {
     let totalComplexity = 0;
 
     // 平台處以外單位溝通
-    const communicationComplexity = parseInt(document.getElementById('communication').value) || 0;
+    const unitInputs = document.querySelectorAll('.unit-name');
+    const unitNames = [];
+    const nameSet = new Set();
+
+    for (const input of unitInputs) {
+        const name = input.value.trim();
+        if (name !== '') {
+            if (nameSet.has(name)) {
+                alert(`單位名稱重複：${name}`);
+                input.focus();
+                return;
+            }
+            nameSet.add(name);
+            unitNames.push(name);
+        }
+    }
+
+    const communicationComplexity = unitNames.length;
+    console.log(`有效單位數量：${communicationComplexity}`);
+    console.log(`單位名稱：${unitNames.join(', ')}`);
     totalComplexity += communicationComplexity;
 
     // 其他產品串聯

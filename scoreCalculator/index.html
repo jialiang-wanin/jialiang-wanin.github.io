@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-TW">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,82 +13,101 @@
             padding: 20px;
             background-color: #f5f5f5;
         }
-        h1, h2 {
+
+        h1,
+        h2 {
             color: #333;
             text-align: center;
         }
+
         .calculator {
             background-color: white;
             padding: 20px;
             border-radius: 8px;
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
         }
+
         .section {
             margin-bottom: 25px;
             padding: 15px;
             border-radius: 8px;
             background-color: #f9f9f9;
         }
+
         .section-title {
             margin-top: 0;
             padding-bottom: 10px;
             border-bottom: 1px solid #ddd;
             color: #2e7d32;
         }
+
         .form-group {
             margin-bottom: 15px;
         }
+
         label {
             display: block;
             margin-bottom: 5px;
             font-weight: bold;
         }
-        select, input {
+
+        select,
+        input {
             width: 100%;
             padding: 8px;
             border: 1px solid #ddd;
             border-radius: 4px;
             box-sizing: border-box;
         }
+
         .checkbox-group {
             display: flex;
             flex-wrap: wrap;
             gap: 10px;
             margin-top: 5px;
         }
+
         .checkbox-item {
             display: flex;
             align-items: center;
         }
+
         .checkbox-item input[type="checkbox"] {
             width: auto;
             margin-right: 5px;
         }
+
         .custom-item {
             display: flex;
             align-items: center;
             margin-top: 5px;
         }
+
         .custom-item input[type="checkbox"] {
             width: auto;
             margin-right: 5px;
         }
+
         .custom-item input[type="text"] {
             width: 120px;
             margin-left: 5px;
         }
+
         .extra-complexity {
             display: flex;
             align-items: center;
             margin-top: 10px;
             gap: 10px;
         }
+
         .extra-complexity input[type="number"] {
             width: 60px;
         }
+
         .extra-complexity input[type="text"] {
             flex-grow: 1;
         }
+
         button {
             background-color: #4CAF50;
             color: white;
@@ -99,9 +119,11 @@
             width: 100%;
             margin-top: 15px;
         }
+
         button:hover {
             background-color: #45a049;
         }
+
         .result {
             margin-top: 20px;
             padding: 15px;
@@ -109,10 +131,12 @@
             border-radius: 4px;
             border-left: 5px solid #4CAF50;
         }
+
         .result h3 {
             margin-top: 0;
             color: #2e7d32;
         }
+
         .breakdown {
             margin-top: 10px;
             padding: 10px;
@@ -120,19 +144,24 @@
             border-radius: 4px;
             font-size: 14px;
         }
+
         table {
             width: 100%;
             border-collapse: collapse;
             margin: 15px 0;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: center;
         }
+
         th {
             background-color: #f2f2f2;
         }
+
         .info-section {
             background-color: #e3f2fd;
             padding: 15px;
@@ -140,9 +169,11 @@
             margin-bottom: 20px;
             border-left: 5px solid #2196F3;
         }
+
         .hidden {
             display: none;
         }
+
         .step-result {
             background-color: #f1f8e9;
             padding: 10px;
@@ -150,9 +181,11 @@
             border-radius: 4px;
             font-weight: bold;
         }
+
         .complexity-table {
             font-size: 0.9em;
         }
+
         .project-name {
             font-size: 1.2em;
             font-weight: bold;
@@ -161,10 +194,11 @@
         }
     </style>
 </head>
+
 <body>
     <div class="calculator">
         <h1>專案分數計算器</h1>
-        
+
         <div class="info-section">
             <h2>計算流程</h2>
             <ol>
@@ -184,7 +218,7 @@
                     <input type="text" id="projectName" placeholder="請輸入專案名稱" required>
                 </div>
             </div>
-            
+
             <!-- 步驟一：基礎績效分 -->
             <div class="section">
                 <h3 class="section-title">步驟一：選擇基礎績效分</h3>
@@ -204,25 +238,33 @@
             <div class="section">
                 <h3 class="section-title">步驟二：計算複雜度</h3>
                 <div class="form-group">
-                    <label for="communication">有無平台處以外單位溝通：</label>
-                    <select id="communication">
-                        <option value="0">無</option>
-                        <option value="1">1-2個單位 (+1複雜度)</option>
-                        <option value="2">3個單位 (+2複雜度)</option>
-                        <option value="3">4個單位 (+3複雜度)</option>
-                        <option value="4">5個單位 (+4複雜度)</option>
-                    </select>
-                    <small style="display: block; margin-top: 5px; color: #666;">(總部企劃/server/營運等，需求方不計入)</small>
+                    <label>有無平台處以外單位溝通：</label>
+                    <div id="unitContainer">
+                        <div class="unit-input">
+                            <input type="text" class="unit-name" placeholder="請輸入單位名稱">
+                            <button type="button" class="remove-unit" onclick="removeUnit(this)">刪除</button>
+                        </div>
+                    </div>
+                    <button type="button" onclick="addUnit()">新增單位</button>
+                    <small style="display: block; margin-top: 5px; color: #666;">(總部企劃/server/營運等，需求方不計入，最多 5
+                        個單位)</small>
                 </div>
-                
+
+
+
                 <div class="form-group">
                     <label>有無其他產品串聯：(每項+1複雜度)</label>
                     <div class="checkbox-group">
-                        <div class="checkbox-item"><input type="checkbox" id="appLink" value="1"><label for="appLink">APP</label></div>
-                        <div class="checkbox-item"><input type="checkbox" id="mahjongLink" value="1"><label for="mahjongLink">麻將</label></div>
-                        <div class="checkbox-item"><input type="checkbox" id="fogLink" value="1"><label for="fogLink">FOG</label></div>
-                        <div class="checkbox-item"><input type="checkbox" id="gashLink" value="1"><label for="gashLink">GASH</label></div>
-                        <div class="checkbox-item"><input type="checkbox" id="thirdPartyLink" value="1"><label for="thirdPartyLink">第三方登入</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="appLink" value="1"><label
+                                for="appLink">APP</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="mahjongLink" value="1"><label
+                                for="mahjongLink">麻將</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="fogLink" value="1"><label
+                                for="fogLink">FOG</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="gashLink" value="1"><label
+                                for="gashLink">GASH</label></div>
+                        <div class="checkbox-item"><input type="checkbox" id="thirdPartyLink" value="1"><label
+                                for="thirdPartyLink">第三方登入</label></div>
                     </div>
                     <div class="custom-item">
                         <input type="checkbox" id="customLink1" value="1">
@@ -235,7 +277,7 @@
                         <input type="text" id="customLink2Text" placeholder="輸入產品名稱">
                     </div>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="connectedFeatures">連動功能數量：</label>
                     <select id="connectedFeatures">
@@ -246,7 +288,7 @@
                     </select>
                     <small style="display: block; margin-top: 5px; color: #666;">(首頁/大廳/登入/聊天室/商城等，功能本身不計入)</small>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="newStrings">新字串量：</label>
                     <select id="newStrings">
@@ -256,7 +298,7 @@
                         <option value="3">50個或以上 (+3複雜度)</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="urgent">是否為急件：</label>
                     <select id="urgent">
@@ -264,7 +306,7 @@
                         <option value="1">是 (+1複雜度)</option>
                     </select>
                 </div>
-                
+
                 <div class="form-group">
                     <label for="extraComplexity">額外複雜度判定：(考量量體等相關變因)</label>
                     <div class="extra-complexity">
@@ -361,6 +403,7 @@
             <div id="breakdown" class="breakdown"></div>
         </div>
     </div>
-    <script src ="script.js"></script>
+    <script src="script.js"></script>
 </body>
+
 </html>
