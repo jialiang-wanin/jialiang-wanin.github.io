@@ -1,0 +1,241 @@
+body {
+    font-family: Arial, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f5f5f5;
+}
+
+h1,
+h2 {
+    color: #333;
+    text-align: center;
+}
+
+.calculator {
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.section {
+    margin-bottom: 25px;
+    padding: 15px;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+}
+
+.section-title {
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 1px solid #ddd;
+    color: #2e7d32;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+}
+
+select,
+input {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.checkbox-item {
+    display: flex;
+    align-items: center;
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: auto;
+    margin-right: 5px;
+}
+
+.custom-item {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+}
+
+.custom-item input[type="checkbox"] {
+    width: auto;
+    margin-right: 5px;
+}
+
+.custom-item input[type="text"] {
+    width: 120px;
+    margin-left: 5px;
+}
+
+.extra-complexity {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    gap: 10px;
+}
+
+.extra-complexity input[type="number"] {
+    width: 60px;
+}
+
+.extra-complexity input[type="text"] {
+    flex-grow: 1;
+}
+
+/* 主按鈕樣式 */
+.primary-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    width: 100%;
+    margin-top: 15px;
+}
+
+.primary-button:hover {
+    background-color: #45a049;
+}
+
+/* 次要按鈕樣式 */
+.secondary-button {
+    background-color: #f0f0f0;
+    color: #333;
+    padding: 5px 10px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    transition: background-color 0.2s;
+}
+
+.secondary-button:hover {
+    background-color: #e0e0e0;
+}
+
+/* 單位輸入區域樣式 */
+.unit-input {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+    gap: 8px;
+}
+
+.unit-input .unit-name {
+    flex-grow: 1;
+}
+
+.unit-input .remove-unit {
+    flex-shrink: 0;
+    width: auto;
+}
+
+/* 新增單位按鈕樣式 */
+#unitContainer {
+    margin-bottom: 10px;
+}
+
+.add-unit-button {
+    background-color: #2196F3;
+    color: white;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 14px;
+    margin-bottom: 10px;
+    transition: background-color 0.2s;
+}
+
+.add-unit-button:hover {
+    background-color: #0b7dda;
+}
+
+.result {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #e9f7ef;
+    border-radius: 4px;
+    border-left: 5px solid #4CAF50;
+}
+
+.result h3 {
+    margin-top: 0;
+    color: #2e7d32;
+}
+
+.breakdown {
+    margin-top: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: center;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+.info-section {
+    background-color: #e3f2fd;
+    padding: 15px;
+    border-radius: 4px;
+    margin-bottom: 20px;
+    border-left: 5px solid #2196F3;
+}
+
+.hidden {
+    display: none;
+}
+
+.step-result {
+    background-color: #f1f8e9;
+    padding: 10px;
+    margin-top: 10px;
+    border-radius: 4px;
+    font-weight: bold;
+}
+
+.complexity-table {
+    font-size: 0.9em;
+}
+
+.project-name {
+    font-size: 1.2em;
+    font-weight: bold;
+    color: #2e7d32;
+    margin-bottom: 10px;
+}

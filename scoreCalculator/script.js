@@ -29,7 +29,7 @@ function addUnit() {
     newInput.classList.add('unit-input');
     newInput.innerHTML = `
         <input type="text" class="unit-name" placeholder="請輸入單位名稱">
-        <button type="button" class="remove-unit" onclick="removeUnit(this)">刪除</button>
+        <button type="button" class="remove-unit secondary-button" onclick="removeUnit(this)">刪除</button>
     `;
     container.appendChild(newInput);
 }
