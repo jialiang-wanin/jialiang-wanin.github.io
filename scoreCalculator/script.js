@@ -199,7 +199,7 @@ function calculateScore() {
                     <li><strong>基礎績效分：</strong> ${baseScore.toFixed(2)}</li>
                     <li><strong>複雜度計算：</strong>
                         <ul>
-                            <li>平台處以外單位溝通：+${communicationComplexity}</li>
+                            <li>平台處以外單位溝通：+${communicationComplexity}（${unitNames.join(', ')}）</li>
                             <li>其他產品串聯 (+${productLinkComplexity})：${productLinkText}</li>
                             <li>連動功能數量：+${connectedFeaturesComplexity}</li>
                             <li>新字串量：+${newStringsComplexity}</li>
