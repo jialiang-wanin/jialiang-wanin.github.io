@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>Meta Pixel 示範網站</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body { font-family: Arial, sans-serif; margin: 40px; background: #f8f8f8; }
+    h1 { color: #333; }
+    .button {
+      padding: 10px 20px;
+      margin: 10px 0;
+      background-color: #4267B2;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .section { background: white; padding: 20px; border-radius: 8px; margin-bottom: 20px; box-shadow: 0 0 8px rgba(0,0,0,0.1); }
+  </style>
+
+  <!-- ✅ 請將 YOUR_PIXEL_ID 替換成你的實際 Pixel ID -->
+  <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+      n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+      if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+      n.queue=[];t=b.createElement(e);t.async=!0;
+      t.src=v;s=b.getElementsByTagName(e)[0];
+      s.parentNode.insertBefore(t,s)}(window, document,'script',
+      'https://connect.facebook.net/en_US/fbevents.js');
+
+    fbq('init', 'YOUR_PIXEL_ID'); // ⬅️ 替換這裡
+    fbq('track', 'PageView');     // 頁面載入即觸發 PageView
+  </script>
+  <noscript>
+    <img height="1" width="1" style="display:none"
+         src="https://www.facebook.com/tr?id=YOUR_PIXEL_ID&ev=PageView&noscript=1"/>
+  </noscript>
+</head>
+
+<body>
+  <h1>Meta Pixel 事件示範網站</h1>
+
+  <div class="section">
+    <h2>商品：台灣夜市吃到飽</h2>
+    <p>這是一款人氣破表的遊戲主題包，享受滷味、鹽酥雞、珍奶一次到位！</p>
+    <button class="button" onclick="trackViewContent()">查看商品</button>
+    <button class="button" onclick="trackAddToCart()">加入購物車</button>
+    <button class="button" onclick="trackPurchase()">完成購買</button>
+  </div>
+
+  <script>
+    function trackViewContent() {
+      fbq('track', 'ViewContent', {
+        content_name: '台灣夜市吃到飽',
+        content_ids: ['sku_nightmarket01'],
+        content_type: 'product',
+        value: 299,
+        currency: 'TWD'
+      });
+      alert("已觸發 ViewContent");
+    }
+
+    function trackAddToCart() {
+      fbq('track', 'AddToCart', {
+        content_name: '台灣夜市吃到飽',
+        content_ids: ['sku_nightmarket01'],
+        content_type: 'product',
+        value: 299,
+        currency: 'TWD'
+      });
+      alert("已觸發 AddToCart");
+    }
+
+    function trackPurchase() {
+      fbq('track', 'Purchase', {
+        content_name: '台灣夜市吃到飽',
+        content_ids: ['sku_nightmarket01'],
+        content_type: 'product',
+        value: 299,
+        currency: 'TWD'
+      });
+      alert("已觸發 Purchase");
+    }
+  </script>
+</body>
+</html>
