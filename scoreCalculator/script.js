@@ -16,6 +16,49 @@ function getComplexityScore(level) {
 
 const MAX_UNITS = 5;
 
+// 添加專案類型變化監聽器
+document.addEventListener('DOMContentLoaded', function() {
+    const projectTypeSelect = document.getElementById('projectType');
+    projectTypeSelect.addEventListener('change', handleProjectTypeChange);
+});
+
+function handleProjectTypeChange() {
+    const projectType = document.getElementById('projectType').value;
+    const isSimpleProject = projectType === '0.02' || projectType === '0.05'; // 協助開卡或JSON相關
+    
+    // 獲取步驟二和步驟三的所有輸入元素
+    const step2Elements = document.querySelectorAll('#calculatorForm .section:nth-of-type(3) input, #calculatorForm .section:nth-of-type(3) select, #calculatorForm .section:nth-of-type(3) button');
+    const step3Section = document.querySelector('#calculatorForm .section:nth-of-type(4)');
+    
+    if (isSimpleProject) {
+        // 禁用步驟二的所有元素
+        step2Elements.forEach(element => {
+            element.disabled = true;
+            if (element.type === 'checkbox') {
+                element.checked = false;
+            } else if (element.tagName === 'SELECT') {
+                element.selectedIndex = 0;
+            } else if (element.type === 'text' || element.type === 'number') {
+                element.value = '';
+            }
+        });
+        
+        // 清除複雜度結果顯示
+        document.getElementById('complexityResult').classList.add('hidden');
+        document.getElementById('baseResult').classList.add('hidden');
+        
+    } else {
+        // 啟用步驟二的所有元素
+        step2Elements.forEach(element => {
+            element.disabled = false;
+        });
+        
+        // 顯示步驟三
+        step3Section.style.opacity = '1';
+        step3Section.style.pointerEvents = 'auto';
+    }
+}
+
 function addUnit() {
     const container = document.getElementById('unitContainer');
     const currentUnits = container.querySelectorAll('.unit-input').length;
