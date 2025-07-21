@@ -239,3 +239,94 @@ th {
     color: #2e7d32;
     margin-bottom: 10px;
 }
+
+
+/* 滑動條容器樣式 */
+.slider-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-top: 10px;
+}
+
+/* 滑動條本體樣式 */
+#jsonSlider {
+    flex: 1;
+    height: 6px;
+    border-radius: 5px;
+    background: #ddd;
+    outline: none;
+    -webkit-appearance: none;
+    border: none;
+}
+
+/* Chrome/Safari 滑動條滑塊樣式 */
+#jsonSlider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#jsonSlider::-webkit-slider-thumb:hover {
+    background: #45a049;
+}
+
+/* Firefox 滑動條滑塊樣式 */
+#jsonSlider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: #4CAF50;
+    cursor: pointer;
+    border: none;
+    transition: background-color 0.2s;
+}
+
+#jsonSlider::-moz-range-thumb:hover {
+    background: #45a049;
+}
+
+/* Firefox 滑動條軌道樣式 */
+#jsonSlider::-moz-range-track {
+    height: 6px;
+    border-radius: 5px;
+    background: #ddd;
+    border: none;
+}
+
+/* 滑動條數值顯示區域 */
+.slider-value {
+    min-width: 60px;
+    text-align: center;
+    font-weight: bold;
+    color: #4CAF50;
+    background: #f1f8e9;
+    padding: 5px 10px;
+    border-radius: 4px;
+    border: 1px solid #c8e6c9;
+    font-size: 14px;
+}
+
+/* 滑動條標籤樣式調整 */
+.slider-container label {
+    margin-bottom: 0;
+}
+
+/* 響應式設計 - 手機版調整 */
+@media (max-width: 480px) {
+    .slider-container {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+    }
+    
+    .slider-value {
+        align-self: center;
+        min-width: 80px;
+    }
+}

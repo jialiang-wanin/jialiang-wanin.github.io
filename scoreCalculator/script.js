@@ -16,20 +16,41 @@ function getComplexityScore(level) {
 
 const MAX_UNITS = 5;
 
-// 添加專案類型變化監聽器
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     const projectTypeSelect = document.getElementById('projectType');
+    const jsonSlider = document.getElementById('jsonSlider');
+    const jsonSliderValue = document.getElementById('jsonSliderValue');
+
+    // 專案類型變化監聽器
     projectTypeSelect.addEventListener('change', handleProjectTypeChange);
+
+    // 滑動條變化監聽器
+    if (jsonSlider && jsonSliderValue) {
+        jsonSlider.addEventListener('input', function () {
+            const value = parseFloat(this.value);
+            jsonSliderValue.textContent = value.toFixed(2);
+            updateBaseScore();
+        });
+    }
 });
+
 
 function handleProjectTypeChange() {
     const projectType = document.getElementById('projectType').value;
-    const isSimpleProject = projectType === '0.02' || projectType === '0.05'; // 協助開卡或JSON相關
-    
+    const jsonSliderContainer = document.getElementById('jsonSliderContainer');
+    const isSimpleProject = projectType === '0.02' || projectType === 'json'; // 修改這裡，將 '0.05' 改為 'json'
+
+    // JSON 滑動條顯示/隱藏邏輯
+    if (projectType === 'json') {
+        jsonSliderContainer.classList.remove('hidden');
+    } else {
+        jsonSliderContainer.classList.add('hidden');
+    }
+
     // 獲取步驟二和步驟三的所有輸入元素
     const step2Elements = document.querySelectorAll('#calculatorForm .section:nth-of-type(3) input, #calculatorForm .section:nth-of-type(3) select, #calculatorForm .section:nth-of-type(3) button');
     const step3Section = document.querySelector('#calculatorForm .section:nth-of-type(4)');
-    
+
     if (isSimpleProject) {
         // 禁用步驟二的所有元素
         step2Elements.forEach(element => {
@@ -42,22 +63,26 @@ function handleProjectTypeChange() {
                 element.value = '';
             }
         });
-        
+
         // 清除複雜度結果顯示
         document.getElementById('complexityResult').classList.add('hidden');
         document.getElementById('baseResult').classList.add('hidden');
-        
+
     } else {
         // 啟用步驟二的所有元素
         step2Elements.forEach(element => {
             element.disabled = false;
         });
-        
+
         // 顯示步驟三
         step3Section.style.opacity = '1';
         step3Section.style.pointerEvents = 'auto';
     }
+
+    // 更新基礎分數顯示
+    updateBaseScore();
 }
+
 
 function addUnit() {
     const container = document.getElementById('unitContainer');
@@ -92,7 +117,16 @@ function calculateScore() {
     }
 
     // 步驟一：獲取基礎績效分
-    const baseScore = parseFloat(document.getElementById('projectType').value) || 0;
+    let baseScore = 0;
+    const projectType = document.getElementById('projectType').value;
+
+    if (projectType === 'json') {
+        const jsonSlider = document.getElementById('jsonSlider');
+        baseScore = jsonSlider ? parseFloat(jsonSlider.value) : 0.05;
+    } else {
+        baseScore = parseFloat(projectType) || 0;
+    }
+
     if (baseScore === 0) {
         alert('請選擇專案類型');
         return;
@@ -270,4 +304,37 @@ function calculateScore() {
             `;
 
     document.getElementById('breakdown').innerHTML = breakdownHTML;
+}
+
+// 更新基礎分數顯示的函數
+function updateBaseScore() {
+    const projectTypeSelect = document.getElementById('projectType');
+    const jsonSlider = document.getElementById('jsonSlider');
+    const baseScoreResult = document.getElementById('baseScoreResult');
+
+    if (!projectTypeSelect || !baseScoreResult) return;
+
+    const selectedValue = projectTypeSelect.value;
+    let score = 0;
+    let description = '';
+
+    if (selectedValue === '') {
+        baseScoreResult.classList.add('hidden');
+        return;
+    }
+
+    if (selectedValue === 'json') {
+        score = jsonSlider ? parseFloat(jsonSlider.value) : 0.05;
+        description = `JSON相關(開卡請系統協助上傳) (${score.toFixed(2)})`;
+    } else {
+        score = parseFloat(selectedValue);
+        const option = projectTypeSelect.querySelector(`option[value="${selectedValue}"]`);
+        description = option ? option.textContent : '';
+    }
+
+    baseScoreResult.innerHTML = `
+        <strong>基礎績效分：${score.toFixed(2)}</strong><br>
+        <span style="color: #666; font-size: 0.9em;">${description}</span>
+    `;
+    baseScoreResult.classList.remove('hidden');
 }
