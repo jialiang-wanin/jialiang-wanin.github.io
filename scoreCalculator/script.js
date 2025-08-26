@@ -79,6 +79,7 @@ function handleProjectTypeChange() {
         step3Section.style.pointerEvents = 'auto';
     }
 
+
     // 更新基礎分數顯示
     updateBaseScore();
 }
