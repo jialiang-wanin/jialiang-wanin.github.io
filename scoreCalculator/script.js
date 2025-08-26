@@ -267,7 +267,7 @@ function calculateScore() {
     // 顯示結果
     document.getElementById('result').classList.remove('hidden');
     document.getElementById('projectNameResult').innerHTML = `專案名稱：${projectName}`;
-    const truncatedScore = Math.floor(finalScore * 100) / 100;
+    const truncatedScore = Math.round(finalScore * 100) / 100;
     document.getElementById('scoreResult').innerHTML = `<strong>最終專案分數：${truncatedScore.toFixed(2)}</strong>`;
 
     // 顯示詳細計算過程
