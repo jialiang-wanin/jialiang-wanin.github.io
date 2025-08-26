@@ -108,6 +108,14 @@ function removeUnit(button) {
     container.removeChild(button.parentElement);
 }
 
+// 通用的無條件補差值函式
+function ceilTo(value, decimals = 2) {
+    const factor = Math.pow(10, decimals);
+    // 先用 toFixed 轉成字串再轉回數字，消除浮點誤差
+    const safeValue = Number(value.toFixed(decimals + 2));
+    return Math.ceil(safeValue * factor) / factor;
+}
+
 function calculateScore() {
     // 獲取專案名稱
 
@@ -264,10 +272,12 @@ function calculateScore() {
     // 計算最終分數
     const finalScore = totalBaseAndComplexity * positionWeight * yearsWeight * projectLeadWeight;
 
+      // ✅ 使用 floorTo() 來無條件捨去到小數第 2 位
+    const truncatedScore = ceilTo(finalScore, 2);
+
     // 顯示結果
     document.getElementById('result').classList.remove('hidden');
     document.getElementById('projectNameResult').innerHTML = `專案名稱：${projectName}`;
-    const truncatedScore = Math.round(finalScore * 100) / 100;
     document.getElementById('scoreResult').innerHTML = `<strong>最終專案分數：${truncatedScore.toFixed(2)}</strong>`;
 
     // 顯示詳細計算過程
