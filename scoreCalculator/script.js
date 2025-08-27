@@ -32,6 +32,53 @@ document.addEventListener('DOMContentLoaded', function () {
             updateBaseScore();
         });
     }
+
+    // 負責比率輸入驗證和限制
+    const responsibilityRatio = document.getElementById('responsibilityRatio');
+    if (responsibilityRatio) {
+        // 限制只能輸入數字
+        responsibilityRatio.addEventListener('keypress', function(e) {
+            // 只允許數字鍵和一些控制鍵
+            if (!/[0-9]/.test(e.key) && !['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
+                e.preventDefault();
+            }
+        });
+
+        // 限制輸入範圍和格式
+        responsibilityRatio.addEventListener('input', function() {
+            // 移除所有非數字字符
+            this.value = this.value.replace(/[^0-9]/g, '');
+            
+            let value = parseInt(this.value) || 0;
+            
+            // 限制範圍 1-100
+            if (value > 100) {
+                this.value = 100;
+            } else if (value < 1 && this.value !== '') {
+                this.value = 1;
+            }
+        });
+
+        // 失去焦點時確保有值
+        responsibilityRatio.addEventListener('blur', function() {
+            if (this.value === '' || parseInt(this.value) < 1) {
+                this.value = 1;
+            }
+        });
+
+        // 防止貼上非數字內容
+        responsibilityRatio.addEventListener('paste', function(e) {
+            e.preventDefault();
+            const paste = (e.clipboardData || window.clipboardData).getData('text');
+            const numericValue = paste.replace(/[^0-9]/g, '');
+            if (numericValue) {
+                let value = parseInt(numericValue);
+                if (value > 100) value = 100;
+                if (value < 1) value = 1;
+                this.value = value;
+            }
+        });
+    }
 });
 
 
@@ -269,10 +316,21 @@ function calculateScore() {
 
     const projectLeadWeight = parseFloat(document.getElementById('isProjectLead').value) || 1.0;
 
-    // 計算最終分數
-    const finalScore = totalBaseAndComplexity * positionWeight * yearsWeight * projectLeadWeight;
+    // 獲取負責比率
+    const responsibilityRatioInput = document.getElementById('responsibilityRatio');
+    const responsibilityRatio = parseInt(responsibilityRatioInput.value) || 0;
+    
+    if (responsibilityRatio === 0 || responsibilityRatio < 1 || responsibilityRatio > 100) {
+        alert('請輸入有效的負責比率 (1-100%)');
+        responsibilityRatioInput.focus();
+        return;
+    }
+    const responsibilityRatioDecimal = responsibilityRatio / 100;
 
-      // ✅ 使用 floorTo() 來無條件捨去到小數第 2 位
+    // 計算最終分數
+    const finalScore = totalBaseAndComplexity* responsibilityRatioDecimal * positionWeight * yearsWeight * projectLeadWeight ;
+
+      // ✅ 使用 ceilTo() 來無條件進位到小數第 2 位
     const truncatedScore = ceilTo(finalScore, 2);
 
     // 顯示結果
@@ -287,7 +345,7 @@ function calculateScore() {
                     <li><strong>基礎績效分：</strong> ${baseScore.toFixed(2)}</li>
                     <li><strong>複雜度計算：</strong>
                         <ul>
-                            <li>平台處以外單位溝通：+${communicationComplexity}（${unitNames.join(', ')}）</li>
+                            <li>平台處以外單位溝通：+${communicationComplexity}（${unitNames.join(', ') || '無'}）</li>
                             <li>其他產品串聯 (+${productLinkComplexity})：${productLinkText}</li>
                             <li>連動功能數量：+${connectedFeaturesComplexity}</li>
                             <li>新字串量：+${newStringsComplexity}</li>
@@ -305,13 +363,14 @@ function calculateScore() {
                     <li><strong>專案基本分：</strong> ${baseScore.toFixed(2)} + ${complexityScore.toFixed(2)} = ${totalBaseAndComplexity.toFixed(2)}</li>
                     <li><strong>應用權重：</strong>
                         <ul>
+                            <li>負責比例：×${responsibilityRatio}% (${responsibilityRatioDecimal.toFixed(2)})</li>
                             <li>職等績效權重：×${positionWeight.toFixed(2)}</li>
                             <li>年資權重：×${yearsWeight.toFixed(2)}</li>
                             <li>專業負責人權重：×${projectLeadWeight.toFixed(1)}</li>
                         </ul>
                     </li>
                 </ol>
-                <p><strong>最終計算公式：</strong> ${totalBaseAndComplexity.toFixed(2)} × ${positionWeight.toFixed(2)} × ${yearsWeight.toFixed(2)} × ${projectLeadWeight.toFixed(1)} = ${finalScore.toFixed(4)}</p>
+                <p><strong>最終計算公式：</strong> ${totalBaseAndComplexity.toFixed(2)} × ${responsibilityRatioDecimal.toFixed(2)} × ${positionWeight.toFixed(2)} × ${yearsWeight.toFixed(2)} × ${projectLeadWeight.toFixed(1)}  = ${finalScore.toFixed(4)}</p>
             `;
 
     document.getElementById('breakdown').innerHTML = breakdownHTML;

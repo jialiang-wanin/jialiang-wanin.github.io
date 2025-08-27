@@ -18,7 +18,7 @@
                 <li>確定基礎績效分（優化或刪減、擴充、全新功能）</li>
                 <li>計算複雜度總和和對應的複雜度績效分</li>
                 <li>基礎績效分 + 複雜度績效分 = 專案基本分</li>
-                <li>專案基本分 × 職等權重 × 年資權重 × 專業負責人權重 = 最終專案分數</li>
+                <li>專案基本分 × 職等權重 × 年資權重 × 專業負責人權重 × 負責比率 = 最終專案分數</li>
             </ol>
         </div>
 
@@ -192,6 +192,16 @@
             <!-- 步驟四：權重計算 -->
             <div class="section">
                 <h3 class="section-title">步驟四：應用權重</h3>
+                
+                <div class="form-group">
+                    <label for="responsibilityRatio">負責比例：</label>
+                    <div class="responsibility-input">
+                        <input type="number" id="responsibilityRatio" min="1" max="100" value="100" required>
+                        <span class="percentage-symbol">%</span>
+                    </div>
+                    <small style="display: block; margin-top: 5px; color: #666;">請輸入您在此專案中的負責比例 (1-100%)</small>
+                </div>
+
                 <div class="form-group">
                     <label for="position">職等：</label>
                     <select id="position" required>
