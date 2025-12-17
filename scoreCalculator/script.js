@@ -20,6 +20,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const projectTypeSelect = document.getElementById('projectType');
     const jsonSlider = document.getElementById('jsonSlider');
     const jsonSliderValue = document.getElementById('jsonSliderValue');
+    const mainDocDifficulty = document.getElementById('mainDocDifficulty');
 
     // 專案類型變化監聽器
     projectTypeSelect.addEventListener('change', handleProjectTypeChange);
@@ -31,6 +32,11 @@ document.addEventListener('DOMContentLoaded', function () {
             jsonSliderValue.textContent = value.toFixed(2);
             updateBaseScore();
         });
+    }
+
+    // 主功能文件難易度變化監聽器
+    if (mainDocDifficulty) {
+        mainDocDifficulty.addEventListener('change', updateBaseScore);
     }
 
     // 負責比率輸入驗證和限制
@@ -85,15 +91,24 @@ document.addEventListener('DOMContentLoaded', function () {
 function handleProjectTypeChange() {
     const projectType = document.getElementById('projectType').value;
     const jsonSliderContainer = document.getElementById('jsonSliderContainer');
-    const isSimpleProject = projectType === '0.02' || projectType === 'json'; // 修改這裡，將 '0.05' 改為 'json'
-
-    // JSON 滑動條顯示/隱藏邏輯
+    const mainDocContainer = document.getElementById('mainDocContainer');
+    const mainDocDifficulty = document.getElementById('mainDocDifficulty');
+    
+    // 隱藏所有選項相關的容器
+    jsonSliderContainer.classList.add('hidden');
+    mainDocContainer.classList.add('hidden');
+    
+    // 根據選擇顯示相應的容器
     if (projectType === 'json') {
         jsonSliderContainer.classList.remove('hidden');
-    } else {
-        jsonSliderContainer.classList.add('hidden');
+    } else if (projectType === 'mainDoc') {
+        mainDocContainer.classList.remove('hidden');
+        // 重置主功能文件難易度選擇
+        mainDocDifficulty.selectedIndex = 0;
     }
-
+    
+    const isSimpleProject = projectType === '0.02' || projectType === 'json' ;
+   
     // 獲取步驟二和步驟三的所有輸入元素
     const step2Elements = document.querySelectorAll('#calculatorForm .section:nth-of-type(3) input, #calculatorForm .section:nth-of-type(3) select, #calculatorForm .section:nth-of-type(3) button');
     const step3Section = document.querySelector('#calculatorForm .section:nth-of-type(4)');
@@ -125,7 +140,6 @@ function handleProjectTypeChange() {
         step3Section.style.opacity = '1';
         step3Section.style.pointerEvents = 'auto';
     }
-
 
     // 更新基礎分數顯示
     updateBaseScore();
@@ -165,7 +179,6 @@ function ceilTo(value, decimals = 2) {
 
 function calculateScore() {
     // 獲取專案名稱
-
     const projectName = document.getElementById('projectName').value.trim();
     if (!projectName) {
         alert('請輸入專案名稱');
@@ -179,6 +192,13 @@ function calculateScore() {
     if (projectType === 'json') {
         const jsonSlider = document.getElementById('jsonSlider');
         baseScore = jsonSlider ? parseFloat(jsonSlider.value) : 0.05;
+        } else if (projectType === 'mainDoc') {
+        const mainDocDifficulty = document.getElementById('mainDocDifficulty').value;
+        if (!mainDocDifficulty) {
+            alert('請選擇主功能文件難易度');
+            return;
+        }
+        baseScore = parseFloat(mainDocDifficulty);
     } else {
         baseScore = parseFloat(projectType) || 0;
     }
@@ -248,9 +268,6 @@ function calculateScore() {
     const newStringsComplexity = parseInt(document.getElementById('newStrings').value) || 0;
     totalComplexity += newStringsComplexity;
 
-    // 急件
-    const urgentComplexity = parseInt(document.getElementById('urgent').value) || 0;
-    totalComplexity += urgentComplexity;
 
     // 額外複雜度判定
     const extraComplexity = parseInt(document.getElementById('extraComplexity').value) || 0;
@@ -290,7 +307,7 @@ function calculateScore() {
 
     document.getElementById('complexityResult').classList.remove('hidden');
     document.getElementById('complexityResult').innerHTML = `
-                複雜度總和：${totalComplexity} (溝通: +${communicationComplexity}, 產品串聯: +${productLinkComplexity}, 連動功能: +${connectedFeaturesComplexity}, 新字串量: +${newStringsComplexity}, 急件: +${urgentComplexity}, 額外複雜度: +${extraComplexity})<br>
+                複雜度總和：${totalComplexity} (溝通: +${communicationComplexity}, 產品串聯: +${productLinkComplexity}, 連動功能: +${connectedFeaturesComplexity}, 新字串量: +${newStringsComplexity}, 額外複雜度: +${extraComplexity})<br>
                 複雜度績效分：${complexityScore.toFixed(2)}
             `;
 
@@ -349,7 +366,6 @@ function calculateScore() {
                             <li>其他產品串聯 (+${productLinkComplexity})：${productLinkText}</li>
                             <li>連動功能數量：+${connectedFeaturesComplexity}</li>
                             <li>新字串量：+${newStringsComplexity}</li>
-                            <li>急件：+${urgentComplexity}</li>
             `;
 
     if (extraComplexity > 0) {
@@ -380,6 +396,7 @@ function calculateScore() {
 function updateBaseScore() {
     const projectTypeSelect = document.getElementById('projectType');
     const jsonSlider = document.getElementById('jsonSlider');
+    const mainDocDifficulty = document.getElementById('mainDocDifficulty');
     const baseScoreResult = document.getElementById('baseScoreResult');
 
     if (!projectTypeSelect || !baseScoreResult) return;
@@ -396,6 +413,16 @@ function updateBaseScore() {
     if (selectedValue === 'json') {
         score = jsonSlider ? parseFloat(jsonSlider.value) : 0.05;
         description = `JSON相關(開卡請系統協助上傳) (${score.toFixed(2)})`;
+        } else if (selectedValue === 'mainDoc') {
+        const difficultyValue = mainDocDifficulty ? mainDocDifficulty.value : '';
+        if (difficultyValue) {
+            score = parseFloat(difficultyValue);
+            const option = mainDocDifficulty.querySelector(`option[value="${difficultyValue}"]`);
+            description = `主功能文件 - ${option ? option.textContent : ''}`;
+        } else {
+            score = 0;
+            description = '主功能文件 (請選擇難易度)';
+        }
     } else {
         score = parseFloat(selectedValue);
         const option = projectTypeSelect.querySelector(`option[value="${selectedValue}"]`);
