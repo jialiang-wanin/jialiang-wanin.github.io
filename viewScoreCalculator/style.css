@@ -1,0 +1,229 @@
+/* Checkbox Groups */
+.checkbox-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+}
+
+/* 將原本的 div 樣式改為 label 樣式，並增加點擊優化 */
+.checkbox-item {
+    display: flex;
+    align-items: center;
+    background: white;
+    padding: 10px 15px; /* 增加內距，讓點擊範圍更大 */
+    border-radius: 6px;
+    border: 1px solid #dee2e6;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    user-select: none; /* 防止點擊時選取到文字 */
+}
+
+/* 滑鼠移過去時變色 */
+.checkbox-item:hover {
+    background-color: #e8f5e9;
+    border-color: #4CAF50;
+    transform: translateY(-1px); /* 微微浮起的效果 */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+/* 當被選中時的樣式 (利用 :has 選擇器，如果瀏覽器支援) */
+.checkbox-item:has(input:checked) {
+    background-color: #e8f5e9;
+    border-color: #4CAF50;
+    font-weight: bold;
+    color: #2e7d32;
+}
+
+.checkbox-item input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    margin-right: 10px;
+    cursor: pointer;
+}
+
+/* 移除原本 label 的 margin，因為現在外層就是 label */
+.checkbox-item span, 
+.checkbox-item label {
+    margin-bottom: 0;
+    cursor: pointer;
+}
+
+/* 其他 CSS 保持不變... */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f0f2f5;
+    color: #333;
+}
+
+h1, h2 {
+    text-align: center;
+    color: #2c3e50;
+}
+
+.calculator {
+    background-color: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+}
+
+.info-section {
+    background-color: #e3f2fd;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border-left: 5px solid #2196F3;
+    font-size: 0.9em;
+}
+
+.info-section ul {
+    margin: 5px 0 0 20px;
+    padding: 0;
+}
+
+.section {
+    margin-bottom: 20px;
+    padding: 20px;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+}
+
+.section-title {
+    margin-top: 0;
+    padding-bottom: 10px;
+    border-bottom: 2px solid #e9ecef;
+    color: #2e7d32;
+    font-size: 1.1em;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #444;
+}
+
+select, input[type="text"], input[type="number"] {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ced4da;
+    border-radius: 6px;
+    box-sizing: border-box;
+    font-size: 16px;
+    transition: border-color 0.2s;
+}
+
+select:focus, input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+/* Custom Input Items */
+.custom-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.custom-item input[type="number"] {
+    width: 80px;
+}
+
+.extra-complexity {
+    display: flex;
+    align-items: center;
+    margin-top: 15px;
+    gap: 10px;
+    background-color: #fff3e0;
+    padding: 10px;
+    border-radius: 6px;
+}
+
+.extra-complexity input[type="number"] {
+    width: 70px;
+    text-align: center;
+}
+
+/* Buttons */
+.primary-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 14px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    width: 100%;
+    margin-top: 10px;
+    transition: background-color 0.2s;
+}
+
+.primary-button:hover {
+    background-color: #45a049;
+}
+
+/* Results */
+.result {
+    margin-top: 25px;
+    padding: 20px;
+    background-color: #e8f5e9;
+    border-radius: 8px;
+    border-left: 6px solid #4CAF50;
+}
+
+.result h3 {
+    margin-top: 0;
+    color: #2e7d32;
+    text-align: left;
+}
+
+#scoreResult {
+    font-size: 2em;
+    font-weight: bold;
+    color: #2e7d32;
+    margin: 10px 0;
+    text-align: center;
+    background: white;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.breakdown {
+    margin-top: 15px;
+    padding: 15px;
+    background-color: rgba(255,255,255,0.6);
+    border-radius: 6px;
+    font-size: 0.95em;
+    line-height: 1.6;
+}
+
+.breakdown ul {
+    margin: 5px 0 10px 20px;
+    padding: 0;
+}
+
+.hidden {
+    display: none !important;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .checkbox-item {
+        width: 100%;
+    }
+    .custom-item {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+}

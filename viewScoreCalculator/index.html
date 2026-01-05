@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>文件審閱績效計算器</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+    <div class="calculator">
+        <h1>文件審閱績效計算器</h1>
+
+        <div class="info-section">
+            <h2>計分說明</h2>
+            <ul>
+                <li><strong>第0關 (洛嘉)：</strong>依難易度直接定分。</li>
+                <li><strong>第1關 (郁庭/志謙)：</strong>計算產品串聯、字串量與功能連動。</li>
+                <li><strong>第2關 (明哲/正輝/宇慈)：</strong>著重於錯誤檢出與機制遺漏。</li>
+                <li>最終分數皆無條件進位至小數點第二位。</li>
+            </ul>
+        </div>
+
+        <form id="calculatorForm">
+            <!-- 關卡選擇 -->
+            <div class="section">
+                <h3 class="section-title">步驟一：選擇審閱關卡</h3>
+                <div class="form-group">
+                    <label for="reviewStage">請選擇目前進行的關卡：</label>
+                    <select id="reviewStage" onchange="updateUI()">
+                        <option value="0">第0關 - 格式審閱</option>
+                        <option value="1" selected>第1關 - 文件初審</option>
+                        <option value="2">第2關 - 文件複審</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 共用參數 (第1、2關才顯示) -->
+            <div id="commonSection" class="section hidden">
+                <h3 class="section-title">步驟二：基本權重設定</h3>
+                
+                <div class="form-group">
+                    <label>開站文件設定：</label>
+                    <!-- 修改：改用 label 包覆整個區塊 -->
+                    <label class="checkbox-item">
+                        <input type="checkbox" id="isOpenSite">
+                        <span>是否為開站文件 (x0.9)</span>
+                    </label>
+                </div>
+
+                <div class="form-group">
+                    <label for="writerLevel">文件撰寫人職等：</label>
+                    <select id="writerLevel">
+                        <option value="1.0">實習生/助理 (x1.0)</option>
+                        <option value="0.9">企劃師 (x0.9)</option>
+                        <option value="0.85">資深以上 (x0.85)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="reviewerLevel">文件審閱人(您)的職等：</label>
+                    <select id="reviewerLevel">
+                        <option value="intern">實習生/助理 (x1.0)</option>
+                        <option value="planner">企劃師 (x1.15)</option>
+                        <option value="senior">資深以上 (x1.3)</option>
+                    </select>
+                    <small style="display: block; margin-top: 5px; color: #666;">
+                        (第1關權重：1.0/1.15/1.3；第2關權重：1.0/1.15/1.3)
+                    </small>
+                </div>
+            </div>
+
+            <!-- 第0關專用輸入 -->
+            <div id="level0Input" class="section hidden">
+                <h3 class="section-title">步驟二：難易度判定</h3>
+                <div class="form-group">
+                    <label for="l0_difficulty">機制內容複雜度：</label>
+                    <select id="l0_difficulty">
+                        <option value="0.01">易 (0.01)</option>
+                        <option value="0.03">中 (0.03)</option>
+                        <option value="0.05">難 (0.05)</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- 第1關專用輸入 -->
+            <div id="level1Input" class="section">
+                <h3 class="section-title">步驟三：第1關複雜度判定</h3>
+                
+                <div class="form-group">
+                    <label for="l1_base">審閱基礎績效分 (易/中/難)：</label>
+                    <select id="l1_base">
+                        <option value="0.02">易 (0.02)</option>
+                        <option value="0.03">中 (0.03)</option>
+                        <option value="0.04">難 (0.04)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>複雜度加權項目 (預設等級 1)：</label>
+                    
+                    <div class="custom-item">
+                        <label>來回檢視次數：</label>
+                        <input type="number" id="l1_retryCount" min="0" value="0" placeholder="次數">
+                        <span>(3次以上 +1級)</span>
+                    </div>
+
+                    <div class="checkbox-group" style="margin-top:15px; border-top:1px dashed #ddd; padding-top:10px;">
+                        <label style="width:100%;">其他產品串聯 (每項 +1級)：</label>
+                        <!-- 修改：全部改用 label 包覆 -->
+                        <label class="checkbox-item"><input type="checkbox" class="l1-prod" value="1"> APP</label>
+                        <label class="checkbox-item"><input type="checkbox" class="l1-prod" value="1"> 麻將</label>
+                        <label class="checkbox-item"><input type="checkbox" class="l1-prod" value="1"> FOG</label>
+                        <label class="checkbox-item"><input type="checkbox" class="l1-prod" value="1"> GASH</label>
+                        <label class="checkbox-item"><input type="checkbox" class="l1-prod" value="1"> 第三方登入</label>
+                    </div>
+
+                    <div style="margin-top:15px;">
+                        <label for="l1_features">連動功能數量 (首頁/大廳/登入等)：</label>
+                        <select id="l1_features">
+                            <option value="0">少於 3 個</option>
+                            <option value="1">3~4 個 (+1級)</option>
+                            <option value="2">5~6 個 (+2級)</option>
+                            <option value="3">7 個以上 (+3級)</option>
+                        </select>
+                    </div>
+
+                    <div style="margin-top:15px;">
+                        <label for="l1_strings">新字串量：</label>
+                        <select id="l1_strings">
+                            <option value="0">少於 20 個</option>
+                            <option value="1">20~34 個 (+1級)</option>
+                            <option value="2">35~49 個 (+2級)</option>
+                            <option value="3">50 個以上 (+3級)</option>
+                        </select>
+                    </div>
+
+                    <div class="extra-complexity">
+                        <span>額外複雜度 +</span>
+                        <input type="number" id="l1_extra" min="0" value="0">
+                        <span>級 (考量 量體等)</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 第2關專用輸入 -->
+            <div id="level2Input" class="section hidden">
+                <h3 class="section-title">步驟三：第2關複雜度判定</h3>
+                
+                <div class="form-group">
+                    <label for="l2_base">審閱基礎績效分 (易/中/難)：</label>
+                    <select id="l2_base">
+                        <option value="0.01">易 (0.01)</option>
+                        <option value="0.02">中 (0.02)</option>
+                        <option value="0.03">難 (0.03)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>複雜度加權項目 (預設等級 1)：</label>
+                    
+                    <div class="custom-item">
+                        <label>來回檢視次數：</label>
+                        <input type="number" id="l2_retryCount" min="0" value="0" placeholder="次數">
+                        <span>(3次以上 +1級)</span>
+                    </div>
+
+                    <div style="margin-top:15px;">
+                        <label for="l2_errors">抓到文字／流程圖錯誤：</label>
+                        <select id="l2_errors">
+                            <option value="0">少於 3 個</option>
+                            <option value="1">3~4 個 (+1級)</option>
+                            <option value="2">5~6 個 (+2級)</option>
+                            <option value="3">7 個以上 (+3級)</option>
+                        </select>
+                    </div>
+
+                    <div class="checkbox-group" style="margin-top:15px;">
+                        <!-- 修改：改用 label 包覆 -->
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="l2_minorError">
+                            <span>抓到普通機制錯誤/矛盾/遺漏 (+1級)</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="l2_majorError">
+                            <span>抓到重大機制錯誤/矛盾/遺漏 (+2級)</span>
+                        </label>
+                    </div>
+
+                    <div class="extra-complexity">
+                        <span>額外複雜度 +</span>
+                        <input type="number" id="l2_extra" min="0" value="0">
+                        <span>級 (考量 量體等)</span>
+                    </div>
+                </div>
+            </div>
+
+            <button type="button" class="primary-button" onclick="calculateScore()">計算分數</button>
+        </form>
+
+        <div id="result" class="result hidden">
+            <h3>計算結果</h3>
+            <div id="scoreResult"></div>
+            <div id="breakdown" class="breakdown"></div>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+
+</html>
