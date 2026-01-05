@@ -41,6 +41,7 @@
                         <option value="">請選擇專案類型</option>
                         <option value="0.02">協助開卡(eg.色票) (0.02)</option>
                         <option value="json">JSON相關(開卡請系統協助上傳)</option>
+                        <option value="mainDoc">主功能文件</option>
                         <option value="0.05">優化或刪減 (0.05)</option>
                         <option value="0.1">擴充 (0.1)</option>
                         <option value="0.3">全新功能 (0.3)</option>
@@ -55,6 +56,17 @@
                             <span id="jsonSliderValue">0.05</span>
                         </div>
                     </div>
+                </div>
+
+                <!-- 主功能文件難易度選擇區塊 -->
+                <div id="mainDocContainer" class="form-group hidden">
+                    <label for="mainDocDifficulty">主功能文件難易度：</label>
+                    <select id="mainDocDifficulty" required>
+                        <option value="">請選擇難易度</option>
+                        <option value="0.03">篇幅少 (0.03)</option>
+                        <option value="0.04">篇幅中等 (0.04)</option>
+                        <option value="0.05">篇幅長 (0.05)</option>
+                    </select>
                 </div>
 
                 <div id="baseScoreResult" class="step-result hidden"></div>
@@ -126,15 +138,6 @@
                         <option value="3">50個或以上 (+3複雜度)</option>
                     </select>
                 </div>
-
-                <div class="form-group">
-                    <label for="urgent">是否為急件：</label>
-                    <select id="urgent">
-                        <option value="0">否</option>
-                        <option value="1">是 (+1複雜度)</option>
-                    </select>
-                </div>
-
                 <div class="form-group">
                     <label for="extraComplexity">額外複雜度判定：(考量量體等相關變因)</label>
                     <div class="extra-complexity">
