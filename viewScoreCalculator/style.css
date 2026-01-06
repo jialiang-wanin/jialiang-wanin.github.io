@@ -138,6 +138,54 @@ select:focus, input:focus {
     width: 80px;
 }
 
+/* 錯誤檢出區塊樣式 */
+.error-calculation-group {
+    background-color: #fff;
+    border: 1px solid #eee;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.error-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 0;
+    border-bottom: 1px dashed #eee;
+}
+
+.error-item:last-child {
+    border-bottom: none;
+}
+
+.error-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.error-title {
+    font-weight: 600;
+    color: #333;
+}
+
+.error-desc {
+    font-size: 0.85em;
+    color: #888;
+}
+
+.error-input {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.error-input input[type="number"] {
+    width: 60px;
+    text-align: center;
+    padding: 5px;
+}
+
+
 /* 額外複雜度區塊樣式優化 */
 .extra-complexity {
     display: flex;

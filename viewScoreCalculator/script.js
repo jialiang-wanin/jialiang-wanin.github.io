@@ -54,6 +54,13 @@ function getReviewerWeight(stage, level) {
 
 // 核心計算函數
 function calculateScore() {
+     // ---【新增 1】檢查專案名稱必填 ---
+    const projectName = document.getElementById('projectName').value.trim();
+    if (!projectName) {
+        alert('請輸入「專案名稱」！');
+        document.getElementById('projectName').focus(); // 幫使用者聚焦
+        return; // 停止計算
+    }
     const stage = document.getElementById('reviewStage').value;
     let finalScore = 0;
     let breakdownHTML = '';
@@ -190,14 +197,20 @@ function calculateScore() {
             details.push(`文字/流程錯誤加權 (+${errVal}級)`);
         }
 
-        // 機制錯誤
-        if (document.getElementById('l2_minorError').checked) {
-            complexityLevel += 1;
-            details.push(`普通機制錯誤 (+1級)`);
+        // 1. 普通錯誤 (每項 +1 級)
+        const minorCount = parseInt(document.getElementById('l2_minorCount').value) || 0;
+        if (minorCount > 0) {
+            const addedLevels = minorCount * 1; // 權重 1
+            complexityLevel += addedLevels;
+            details.push(`普通機制錯誤 ${minorCount} 項 (+${addedLevels}級)`);
         }
-        if (document.getElementById('l2_majorError').checked) {
-            complexityLevel += 2;
-            details.push(`重大機制錯誤 (+2級)`);
+
+        // 2. 重大錯誤 (每項 +2 級)
+        const majorCount = parseInt(document.getElementById('l2_majorCount').value) || 0;
+        if (majorCount > 0) {
+            const addedLevels = majorCount * 2; // 權重 2
+            complexityLevel += addedLevels;
+            details.push(`重大機制錯誤 ${majorCount} 項 (+${addedLevels}級)`);
         }
 
         // ---【修改開始】額外複雜度驗證邏輯 ---

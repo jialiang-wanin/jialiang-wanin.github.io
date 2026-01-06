@@ -25,6 +25,14 @@
         <form id="calculatorForm">
             <!-- 關卡選擇 -->
             <div class="section">
+                <h3 class="section-title">專案資訊</h3>
+                <div class="form-group">
+                    <label for="projectName">專案名稱 <span style="color: red;">*</span>：</label>
+                    <input type="text" id="projectName" placeholder="請輸入專案名稱 (必填)"
+                        style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px; box-sizing: border-box;">
+                </div>
+            </div>
+            <div class="section">
                 <h3 class="section-title">步驟一：選擇審閱關卡</h3>
                 <div class="form-group">
                     <label for="reviewStage">請選擇目前進行的關卡：</label>
@@ -181,17 +189,34 @@
                         </select>
                     </div>
 
-                    <div class="checkbox-group" style="margin-top:15px;">
-                        <!-- 修改：改用 label 包覆 -->
-                        <label class="checkbox-item">
-                            <input type="checkbox" id="l2_minorError">
-                            <span>抓到普通機制錯誤/矛盾/遺漏 (+1級)</span>
-                        </label>
-                        <label class="checkbox-item">
-                            <input type="checkbox" id="l2_majorError">
-                            <span>抓到重大機制錯誤/矛盾/遺漏 (+2級)</span>
-                        </label>
+                    <div class="error-calculation-group" style="margin-top:15px;">
+                        <label>機制錯誤檢出 (請輸入數量)：</label>
+
+                        <!-- 普通錯誤 -->
+                        <div class="error-item">
+                            <div class="error-info">
+                                <span class="error-title">普通機制錯誤/矛盾/遺漏</span>
+                                <span class="error-desc">每項 +1 級</span>
+                            </div>
+                            <div class="error-input">
+                                <input type="number" id="l2_minorCount" min="0" value="0" placeholder="0">
+                                <span>項</span>
+                            </div>
+                        </div>
+
+                        <!-- 重大錯誤 -->
+                        <div class="error-item">
+                            <div class="error-info">
+                                <span class="error-title" style="color: #d32f2f;">重大機制錯誤/矛盾/遺漏</span>
+                                <span class="error-desc">每項 +2 級</span>
+                            </div>
+                            <div class="error-input">
+                                <input type="number" id="l2_majorCount" min="0" value="0" placeholder="0">
+                                <span>項</span>
+                            </div>
+                        </div>
                     </div>
+
 
                     <div class="extra-complexity">
                         <div class="extra-label">額外複雜度加權：</div>
