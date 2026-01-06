@@ -138,19 +138,49 @@ select:focus, input:focus {
     width: 80px;
 }
 
+/* 額外複雜度區塊樣式優化 */
 .extra-complexity {
     display: flex;
     align-items: center;
+    flex-wrap: wrap; /* 手機版空間不足時自動換行 */
     margin-top: 15px;
     gap: 10px;
-    background-color: #fff3e0;
-    padding: 10px;
+    background-color: #fff3e0; /* 淺橘色背景提醒這是特殊加分 */
+    padding: 12px;
     border-radius: 6px;
+    border: 1px solid #ffe0b2;
 }
 
-.extra-complexity input[type="number"] {
-    width: 70px;
+.extra-label {
+    font-weight: bold;
+    color: #e65100;
+    min-width: 120px;
+}
+
+/* 原因輸入框：自動填滿剩餘空間 */
+.reason-input {
+    flex-grow: 1;
+    min-width: 200px; /* 防止縮太小 */
+    border: 1px solid #ffcc80;
+}
+
+.reason-input:focus {
+    border-color: #fb8c00;
+    box-shadow: 0 0 0 2px rgba(251, 140, 0, 0.2);
+}
+
+/* 分數輸入區塊 */
+.score-input-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.score-input-group input[type="number"] {
+    width: 60px;
     text-align: center;
+    border: 1px solid #ffcc80;
 }
 
 /* Buttons */

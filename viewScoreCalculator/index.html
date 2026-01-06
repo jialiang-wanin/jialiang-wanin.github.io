@@ -15,9 +15,9 @@
         <div class="info-section">
             <h2>計分說明</h2>
             <ul>
-                <li><strong>第0關 (洛嘉)：</strong>依難易度直接定分。</li>
-                <li><strong>第1關 (郁庭/志謙)：</strong>計算產品串聯、字串量與功能連動。</li>
-                <li><strong>第2關 (明哲/正輝/宇慈)：</strong>著重於錯誤檢出與機制遺漏。</li>
+                <li><strong>第0關</strong>依難易度直接定分。</li>
+                <li><strong>第1關</strong>計算產品串聯、字串量與功能連動。</li>
+                <li><strong>第2關</strong>著重於錯誤檢出與機制遺漏。</li>
                 <li>最終分數皆無條件進位至小數點第二位。</li>
             </ul>
         </div>
@@ -39,7 +39,7 @@
             <!-- 共用參數 (第1、2關才顯示) -->
             <div id="commonSection" class="section hidden">
                 <h3 class="section-title">步驟二：基本權重設定</h3>
-                
+
                 <div class="form-group">
                     <label>開站文件設定：</label>
                     <!-- 修改：改用 label 包覆整個區塊 -->
@@ -87,7 +87,7 @@
             <!-- 第1關專用輸入 -->
             <div id="level1Input" class="section">
                 <h3 class="section-title">步驟三：第1關複雜度判定</h3>
-                
+
                 <div class="form-group">
                     <label for="l1_base">審閱基礎績效分 (易/中/難)：</label>
                     <select id="l1_base">
@@ -98,8 +98,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label>複雜度加權項目 (預設等級 1)：</label>
-                    
+                    <label>複雜度加權項目 ：</label>
+
                     <div class="custom-item">
                         <label>來回檢視次數：</label>
                         <input type="number" id="l1_retryCount" min="0" value="0" placeholder="次數">
@@ -137,17 +137,22 @@
                     </div>
 
                     <div class="extra-complexity">
-                        <span>額外複雜度 +</span>
-                        <input type="number" id="l1_extra" min="0" value="0">
-                        <span>級 (考量 量體等)</span>
+                        <div class="extra-label">額外複雜度加權：</div>
+                        <input type="text" id="l1_extra_reason" class="reason-input" placeholder="請輸入加分原因 (必填)">
+                        <div class="score-input-group">
+                            <span>+</span>
+                            <input type="number" id="l1_extra" min="0" value="0">
+                            <span>級</span>
+                        </div>
                     </div>
+
                 </div>
             </div>
 
             <!-- 第2關專用輸入 -->
             <div id="level2Input" class="section hidden">
                 <h3 class="section-title">步驟三：第2關複雜度判定</h3>
-                
+
                 <div class="form-group">
                     <label for="l2_base">審閱基礎績效分 (易/中/難)：</label>
                     <select id="l2_base">
@@ -158,8 +163,8 @@
                 </div>
 
                 <div class="form-group">
-                    <label>複雜度加權項目 (預設等級 1)：</label>
-                    
+                    <label>複雜度加權項目 ：</label>
+
                     <div class="custom-item">
                         <label>來回檢視次數：</label>
                         <input type="number" id="l2_retryCount" min="0" value="0" placeholder="次數">
@@ -189,10 +194,15 @@
                     </div>
 
                     <div class="extra-complexity">
-                        <span>額外複雜度 +</span>
-                        <input type="number" id="l2_extra" min="0" value="0">
-                        <span>級 (考量 量體等)</span>
+                        <div class="extra-label">額外複雜度加權：</div>
+                        <input type="text" id="l2_extra_reason" class="reason-input" placeholder="請輸入加分原因 (必填)">
+                        <div class="score-input-group">
+                            <span>+</span>
+                            <input type="number" id="l2_extra" min="0" value="0">
+                            <span>級</span>
+                        </div>
                     </div>
+
                 </div>
             </div>
 

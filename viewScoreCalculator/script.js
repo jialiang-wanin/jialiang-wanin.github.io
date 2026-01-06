@@ -109,11 +109,19 @@ function calculateScore() {
             details.push(`新字串量加權 (+${strVal}級)`);
         }
 
-        // 額外
+         // ---【修改開始】額外複雜度驗證邏輯 ---
         const extra = parseInt(document.getElementById('l1_extra').value) || 0;
+        const extraReason = document.getElementById('l1_extra_reason').value.trim();
+
         if (extra > 0) {
+            if (!extraReason) {
+                alert('請輸入「額外複雜度」的加分原因！');
+                document.getElementById('l1_extra_reason').focus(); // 幫使用者聚焦到輸入框
+                return; // 停止計算
+            }
             complexityLevel += extra;
-            details.push(`額外指定加權 (+${extra}級)`);
+            // 將使用者輸入的原因顯示在結果中
+            details.push(`${extraReason} (+${extra}級)`);
         }
 
         // 3. 複雜度分數查表 (修正：處理 0 的情況)
@@ -192,13 +200,21 @@ function calculateScore() {
             details.push(`重大機制錯誤 (+2級)`);
         }
 
-        // 額外
+        // ---【修改開始】額外複雜度驗證邏輯 ---
         const extra = parseInt(document.getElementById('l2_extra').value) || 0;
-        if (extra > 0) {
-            complexityLevel += extra;
-            details.push(`額外指定加權 (+${extra}級)`);
-        }
+        const extraReason = document.getElementById('l2_extra_reason').value.trim();
 
+        if (extra > 0) {
+            if (!extraReason) {
+                alert('請輸入「額外複雜度」的加分原因！');
+                document.getElementById('l2_extra_reason').focus();
+                return; // 停止計算
+            }
+            complexityLevel += extra;
+            details.push(`${extraReason} (+${extra}級)`);
+        }
+        // ---【修改結束】---
+        
         // 3. 複雜度分數查表 (第2關表)
         let complexityScore = 0;
         // 第2關表：Level 1 是 0分，Level 2 才是 0.01

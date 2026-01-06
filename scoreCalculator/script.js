@@ -103,7 +103,7 @@ function handleProjectTypeChange() {
         jsonSliderContainer.classList.remove('hidden');
     } else if (projectType === 'mainDoc') {
         mainDocContainer.classList.remove('hidden');
-        // 重置主功能文件難易度選擇
+        // 重置文件難主功能易度選擇
         mainDocDifficulty.selectedIndex = 0;
     }
     
