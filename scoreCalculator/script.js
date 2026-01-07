@@ -21,6 +21,8 @@ document.addEventListener('DOMContentLoaded', function () {
     const jsonSlider = document.getElementById('jsonSlider');
     const jsonSliderValue = document.getElementById('jsonSliderValue');
     const mainDocDifficulty = document.getElementById('mainDocDifficulty');
+    const openSiteDocDifficulty = document.getElementById('openSiteDocDifficulty');
+
 
     // 專案類型變化監聽器
     projectTypeSelect.addEventListener('change', handleProjectTypeChange);
@@ -39,11 +41,16 @@ document.addEventListener('DOMContentLoaded', function () {
         mainDocDifficulty.addEventListener('change', updateBaseScore);
     }
 
+    // 【新增】開站文件篇幅變化監聽器
+    if (openSiteDocDifficulty) {
+        openSiteDocDifficulty.addEventListener('change', updateBaseScore);
+    }
+
     // 負責比率輸入驗證和限制
     const responsibilityRatio = document.getElementById('responsibilityRatio');
     if (responsibilityRatio) {
         // 限制只能輸入數字
-        responsibilityRatio.addEventListener('keypress', function(e) {
+        responsibilityRatio.addEventListener('keypress', function (e) {
             // 只允許數字鍵和一些控制鍵
             if (!/[0-9]/.test(e.key) && !['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
                 e.preventDefault();
@@ -51,12 +58,12 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // 限制輸入範圍和格式
-        responsibilityRatio.addEventListener('input', function() {
+        responsibilityRatio.addEventListener('input', function () {
             // 移除所有非數字字符
             this.value = this.value.replace(/[^0-9]/g, '');
-            
+
             let value = parseInt(this.value) || 0;
-            
+
             // 限制範圍 1-100
             if (value > 100) {
                 this.value = 100;
@@ -66,14 +73,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
 
         // 失去焦點時確保有值
-        responsibilityRatio.addEventListener('blur', function() {
+        responsibilityRatio.addEventListener('blur', function () {
             if (this.value === '' || parseInt(this.value) < 1) {
                 this.value = 1;
             }
         });
 
         // 防止貼上非數字內容
-        responsibilityRatio.addEventListener('paste', function(e) {
+        responsibilityRatio.addEventListener('paste', function (e) {
             e.preventDefault();
             const paste = (e.clipboardData || window.clipboardData).getData('text');
             const numericValue = paste.replace(/[^0-9]/g, '');
@@ -93,11 +100,14 @@ function handleProjectTypeChange() {
     const jsonSliderContainer = document.getElementById('jsonSliderContainer');
     const mainDocContainer = document.getElementById('mainDocContainer');
     const mainDocDifficulty = document.getElementById('mainDocDifficulty');
-    
+    const openSiteDocContainer = document.getElementById('openSiteDocContainer');
+    const openSiteDocDifficulty = document.getElementById('openSiteDocDifficulty');
+
     // 隱藏所有選項相關的容器
     jsonSliderContainer.classList.add('hidden');
     mainDocContainer.classList.add('hidden');
-    
+    openSiteDocContainer.classList.add('hidden');
+
     // 根據選擇顯示相應的容器
     if (projectType === 'json') {
         jsonSliderContainer.classList.remove('hidden');
@@ -106,9 +116,14 @@ function handleProjectTypeChange() {
         // 重置文件難主功能易度選擇
         mainDocDifficulty.selectedIndex = 0;
     }
-    
-    const isSimpleProject = projectType === '0.02' || projectType === 'json' ;
-   
+    else if (projectType === 'openSiteDoc') {
+        openSiteDocContainer.classList.remove('hidden');
+        // 重置選擇
+        openSiteDocDifficulty.selectedIndex = 0;
+    }
+
+    const isSimpleProject = projectType === '0.02' || projectType === 'json';
+
     // 獲取步驟二和步驟三的所有輸入元素
     const step2Elements = document.querySelectorAll('#calculatorForm .section:nth-of-type(3) input, #calculatorForm .section:nth-of-type(3) select, #calculatorForm .section:nth-of-type(3) button');
     const step3Section = document.querySelector('#calculatorForm .section:nth-of-type(4)');
@@ -192,16 +207,26 @@ function calculateScore() {
     if (projectType === 'json') {
         const jsonSlider = document.getElementById('jsonSlider');
         baseScore = jsonSlider ? parseFloat(jsonSlider.value) : 0.05;
-        } else if (projectType === 'mainDoc') {
+    } else if (projectType === 'mainDoc') {
         const mainDocDifficulty = document.getElementById('mainDocDifficulty').value;
         if (!mainDocDifficulty) {
             alert('請選擇主功能文件難易度');
             return;
         }
         baseScore = parseFloat(mainDocDifficulty);
-    } else {
+    } // 【新增】開站文件計算邏輯
+    else if (projectType === 'openSiteDoc') {
+        const openSiteDocDifficulty = document.getElementById('openSiteDocDifficulty').value;
+        if (!openSiteDocDifficulty) {
+            alert('請選擇開站文件篇幅');
+            return;
+        }
+        baseScore = parseFloat(openSiteDocDifficulty);
+    }
+    else {
         baseScore = parseFloat(projectType) || 0;
     }
+
 
     if (baseScore === 0) {
         alert('請選擇專案類型');
@@ -336,7 +361,7 @@ function calculateScore() {
     // 獲取負責比率
     const responsibilityRatioInput = document.getElementById('responsibilityRatio');
     const responsibilityRatio = parseInt(responsibilityRatioInput.value) || 0;
-    
+
     if (responsibilityRatio === 0 || responsibilityRatio < 1 || responsibilityRatio > 100) {
         alert('請輸入有效的負責比率 (1-100%)');
         responsibilityRatioInput.focus();
@@ -345,9 +370,9 @@ function calculateScore() {
     const responsibilityRatioDecimal = responsibilityRatio / 100;
 
     // 計算最終分數
-    const finalScore = totalBaseAndComplexity* responsibilityRatioDecimal * positionWeight * yearsWeight * projectLeadWeight ;
+    const finalScore = totalBaseAndComplexity * responsibilityRatioDecimal * positionWeight * yearsWeight * projectLeadWeight;
 
-      // ✅ 使用 ceilTo() 來無條件進位到小數第 2 位
+    // ✅ 使用 ceilTo() 來無條件進位到小數第 2 位
     const truncatedScore = ceilTo(finalScore, 2);
 
     // 顯示結果
@@ -397,6 +422,7 @@ function updateBaseScore() {
     const projectTypeSelect = document.getElementById('projectType');
     const jsonSlider = document.getElementById('jsonSlider');
     const mainDocDifficulty = document.getElementById('mainDocDifficulty');
+    const openSiteDocDifficulty = document.getElementById('openSiteDocDifficulty');
     const baseScoreResult = document.getElementById('baseScoreResult');
 
     if (!projectTypeSelect || !baseScoreResult) return;
@@ -413,7 +439,7 @@ function updateBaseScore() {
     if (selectedValue === 'json') {
         score = jsonSlider ? parseFloat(jsonSlider.value) : 0.05;
         description = `JSON相關(開卡請系統協助上傳) (${score.toFixed(2)})`;
-        } else if (selectedValue === 'mainDoc') {
+    } else if (selectedValue === 'mainDoc') {
         const difficultyValue = mainDocDifficulty ? mainDocDifficulty.value : '';
         if (difficultyValue) {
             score = parseFloat(difficultyValue);
@@ -423,7 +449,22 @@ function updateBaseScore() {
             score = 0;
             description = '主功能文件 (請選擇難易度)';
         }
-    } else {
+    } // 【新增】開站文件顯示邏輯
+    else if (selectedValue === 'openSiteDoc') {
+        const difficultyValue = openSiteDocDifficulty ? openSiteDocDifficulty.value : '';
+        if (difficultyValue) {
+            score = parseFloat(difficultyValue);
+            // 抓取選項文字來顯示
+            const option = openSiteDocDifficulty.querySelector(`option[value="${difficultyValue}"]`);
+            // 只顯示括號前的文字讓畫面乾淨點，或者直接顯示全部
+            description = `開站文件 - ${option ? option.textContent.split('(')[0] : ''} (${score})`;
+        } else {
+            score = 0;
+            description = '開站文件 (請選擇篇幅)';
+        }
+    }
+
+    else {
         score = parseFloat(selectedValue);
         const option = projectTypeSelect.querySelector(`option[value="${selectedValue}"]`);
         description = option ? option.textContent : '';
