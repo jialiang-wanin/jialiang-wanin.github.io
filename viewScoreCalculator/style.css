@@ -295,6 +295,108 @@ select:focus, input:focus {
     display: none !important;
 }
 
+
+/* --- 動態錯誤清單樣式 --- */
+
+.error-management-group {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.error-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.error-controls select {
+    flex-grow: 1; /* 佔滿剩餘空間 */
+}
+
+.add-btn {
+    background-color: #2e7d32;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    white-space: nowrap;
+}
+
+.add-btn:hover {
+    background-color: #1b5e20;
+}
+
+/* 單個錯誤項目的容器 */
+.error-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 6px;
+    margin-bottom: 8px;
+    animation: fadeIn 0.3s ease;
+}
+
+/* 重大錯誤的特殊樣式 */
+.error-row.major-error {
+    background-color: #ffebee;
+    border-color: #ffcdd2;
+}
+
+.error-tag {
+    font-size: 0.85em;
+    padding: 4px 8px;
+    border-radius: 4px;
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+.tag-minor {
+    background-color: #e3f2fd;
+    color: #1565c0;
+}
+
+.tag-major {
+    background-color: #ffebee;
+    color: #c62828;
+}
+
+/* 說明輸入框 */
+.error-desc-input {
+    flex-grow: 1;
+    padding: 6px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 0.95em;
+}
+
+/* 刪除按鈕 */
+.remove-btn {
+    background-color: transparent;
+    border: 1px solid #ef5350;
+    color: #ef5350;
+    border-radius: 4px;
+    padding: 4px 8px;
+    cursor: pointer;
+    font-size: 0.85em;
+}
+
+.remove-btn:hover {
+    background-color: #ef5350;
+    color: white;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+
 /* Responsive */
 @media (max-width: 480px) {
     .checkbox-item {
@@ -305,3 +407,4 @@ select:focus, input:focus {
         align-items: flex-start;
     }
 }
+

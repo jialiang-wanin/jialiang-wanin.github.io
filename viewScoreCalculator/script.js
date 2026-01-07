@@ -52,6 +52,50 @@ function getReviewerWeight(stage, level) {
     return 1.0;
 }
 
+// --- 動態錯誤清單功能 ---
+
+// 新增一筆錯誤紀錄
+function addErrorRow() {
+    const select = document.getElementById('errorTypeSelect');
+    const typeValue = parseInt(select.value); // 1 或 2
+    const typeText = select.options[select.selectedIndex].text;
+    const container = document.getElementById('errorListContainer');
+
+    // 建立一個唯一的 ID (用於刪除或除錯)
+    const rowId = 'err_' + Date.now();
+
+    const row = document.createElement('div');
+    // 根據類型加上不同的 class (major-error 用於紅色樣式)
+    row.className = `error-row ${typeValue === 2 ? 'major-error' : ''}`;
+    row.id = rowId;
+    
+    // 將分數存在 data-score 屬性中，方便計算時讀取
+    row.dataset.score = typeValue;
+
+    // 設定 HTML 內容
+    row.innerHTML = `
+        <span class="error-tag ${typeValue === 2 ? 'tag-major' : 'tag-minor'}">
+            ${typeValue === 1 ? '普通' : '重大'} (+${typeValue})
+        </span>
+        <input type="text" class="error-desc-input" placeholder="請輸入錯誤說明 (必填)" required>
+        <button type="button" class="remove-btn" onclick="removeErrorRow('${rowId}')">移除</button>
+    `;
+
+    container.appendChild(row);
+    
+    // 自動聚焦到新生成的輸入框
+    row.querySelector('input').focus();
+}
+
+// 移除一筆錯誤紀錄
+function removeErrorRow(rowId) {
+    const row = document.getElementById(rowId);
+    if (row) {
+        row.remove();
+    }
+}
+
+
 // 核心計算函數
 function calculateScore() {
      // ---【新增 1】檢查專案名稱必填 ---
@@ -197,20 +241,28 @@ function calculateScore() {
             details.push(`文字/流程錯誤加權 (+${errVal}級)`);
         }
 
-        // 1. 普通錯誤 (每項 +1 級)
-        const minorCount = parseInt(document.getElementById('l2_minorCount').value) || 0;
-        if (minorCount > 0) {
-            const addedLevels = minorCount * 1; // 權重 1
-            complexityLevel += addedLevels;
-            details.push(`普通機制錯誤 ${minorCount} 項 (+${addedLevels}級)`);
-        }
+        // 獲取所有動態產生的錯誤列
+        const errorRows = document.querySelectorAll('#errorListContainer .error-row');
+        
+        // 遍歷每一列進行檢查與計算
+        for (const row of errorRows) {
+            const score = parseInt(row.dataset.score); // 從 data-score 屬性拿分數 (1 或 2)
+            const input = row.querySelector('.error-desc-input');
+            const desc = input.value.trim();
 
-        // 2. 重大錯誤 (每項 +2 級)
-        const majorCount = parseInt(document.getElementById('l2_majorCount').value) || 0;
-        if (majorCount > 0) {
-            const addedLevels = majorCount * 2; // 權重 2
-            complexityLevel += addedLevels;
-            details.push(`重大機制錯誤 ${majorCount} 項 (+${addedLevels}級)`);
+            // 驗證：說明必填
+            if (!desc) {
+                alert('請填寫所有的錯誤說明！');
+                input.focus();
+                return; // 停止計算
+            }
+
+            // 加分
+            complexityLevel += score;
+            
+            // 記錄到詳細資訊 (格式：[普通] 說明文字 (+1級))
+            const typeName = score === 2 ? '重大錯誤' : '普通錯誤';
+            details.push(`${typeName}：${desc} (+${score}級)`);
         }
 
         // ---【修改開始】額外複雜度驗證邏輯 ---

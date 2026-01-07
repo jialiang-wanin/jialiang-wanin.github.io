@@ -189,33 +189,25 @@
                         </select>
                     </div>
 
-                    <div class="error-calculation-group" style="margin-top:15px;">
-                        <label>機制錯誤檢出 (請輸入數量)：</label>
+                    <!-- 新版錯誤檢出區塊 -->
+                    <div class="error-management-group" style="margin-top:15px;">
+                        <label>機制錯誤檢出 (需填寫說明)：</label>
 
-                        <!-- 普通錯誤 -->
-                        <div class="error-item">
-                            <div class="error-info">
-                                <span class="error-title">普通機制錯誤/矛盾/遺漏</span>
-                                <span class="error-desc">每項 +1 級</span>
-                            </div>
-                            <div class="error-input">
-                                <input type="number" id="l2_minorCount" min="0" value="0" placeholder="0">
-                                <span>項</span>
-                            </div>
+                        <!-- 控制列：選擇類型並新增 -->
+                        <div class="error-controls">
+                            <select id="errorTypeSelect">
+                                <option value="1">普通機制錯誤 (+1級)</option>
+                                <option value="2">重大機制錯誤 (+2級)</option>
+                            </select>
+                            <button type="button" class="add-btn" onclick="addErrorRow()">+ 新增紀錄</button>
                         </div>
 
-                        <!-- 重大錯誤 -->
-                        <div class="error-item">
-                            <div class="error-info">
-                                <span class="error-title" style="color: #d32f2f;">重大機制錯誤/矛盾/遺漏</span>
-                                <span class="error-desc">每項 +2 級</span>
-                            </div>
-                            <div class="error-input">
-                                <input type="number" id="l2_majorCount" min="0" value="0" placeholder="0">
-                                <span>項</span>
-                            </div>
+                        <!-- 清單容器：動態產生的項目會放在這裡 -->
+                        <div id="errorListContainer" class="error-list-container">
+                            <!-- 預設為空，由 JS 動態產生 -->
                         </div>
                     </div>
+
 
 
                     <div class="extra-complexity">
