@@ -117,7 +117,8 @@ function calculateScore() {
         breakdownHTML = `
             <p><strong>計算過程：</strong></p>
             <ul>
-                <li>關卡：第0關 (洛嘉審閱)</li>
+                <li>關卡：第0關</li>
+                <li><strong>專案名稱：</strong> ${projectName}</li>
                 <li>機制複雜度定分：${difficulty}</li>
             </ul>
         `;
