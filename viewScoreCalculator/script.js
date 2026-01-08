@@ -201,6 +201,7 @@ function calculateScore() {
         breakdownHTML = `
             <p><strong>計算過程：</strong></p>
             <ul>
+                <li><strong>專案名稱：</strong> ${projectName}</li>
                 <li><strong>基礎績效分：</strong> ${baseScore}</li>
                 <li><strong>複雜度等級：</strong> Level ${complexityLevel}
                     <br><small style="color:#666">(${details.length > 0 ? details.join(', ') : '無額外加權'})</small>
@@ -307,6 +308,7 @@ function calculateScore() {
         breakdownHTML = `
             <p><strong>計算過程：</strong></p>
             <ul>
+                <li><strong>專案名稱：</strong> ${projectName}</li>
                 <li><strong>基礎績效分：</strong> ${baseScore}</li>
                 <li><strong>複雜度等級：</strong> Level ${complexityLevel}
                     <br><small style="color:#666">(${details.length > 0 ? details.join(', ') : '無額外加權'})</small>
