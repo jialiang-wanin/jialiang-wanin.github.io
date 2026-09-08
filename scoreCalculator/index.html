@@ -17,8 +17,10 @@
             <ol>
                 <li>確定基礎績效分（優化或刪減、擴充、全新功能）</li>
                 <li>計算複雜度總和和對應的複雜度績效分</li>
-                <li>基礎績效分 + 複雜度績效分 = 專案基本分（即最終分數）</li>
+                <li>基礎績效分 + 複雜度績效分 = 專案基本分</li>
+                <li>專案基本分 × 負責比例 = 最終專案分數</li>
             </ol>
+            <p style="margin: 12px 0 0; font-size: 0.85rem; color: #64748b;">＊本計算機之計分規則依據 2026 / 9 版績效標準</p>
         </div>
 
         <form id="calculatorForm">
@@ -198,8 +200,21 @@
             <!-- 步驟三：基礎績效分 + 複雜度績效分 -->
             <div class="section">
                 <h3 class="section-title">步驟三：計算專案基本分</h3>
-                <p>基礎績效分 + 複雜度績效分 = 專案基本分（即最終分數）</p>
+                <p>基礎績效分 + 複雜度績效分 = 專案基本分</p>
                 <div id="baseResult" class="step-result hidden"></div>
+            </div>
+
+            <!-- 步驟四：負責比例 -->
+            <div class="section">
+                <h3 class="section-title">步驟四：套用負責比例</h3>
+                <div class="form-group">
+                    <label for="responsibilityRatio">負責比例：</label>
+                    <div class="responsibility-input">
+                        <input type="number" id="responsibilityRatio" min="1" max="100" value="100" required>
+                        <span class="percentage-symbol">%</span>
+                    </div>
+                    <small style="display: block; margin-top: 5px; color: #64748b;">專案基本分 × 負責比例 = 最終專案分數（請輸入 1-100%）</small>
+                </div>
             </div>
 
             <button type="button" class="primary-button" onclick="calculateScore()">計算專案分數</button>
