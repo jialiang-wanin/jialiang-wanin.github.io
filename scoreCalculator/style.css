@@ -105,6 +105,28 @@ input:disabled {
     cursor: not-allowed;
 }
 
+/* 負責比例輸入框 */
+.responsibility-input {
+    display: flex;
+    align-items: center;
+    position: relative;
+    max-width: 140px;
+}
+
+.responsibility-input input[type="number"] {
+    width: 100%;
+    padding-right: 28px;
+    text-align: right;
+}
+
+.percentage-symbol {
+    position: absolute;
+    right: 12px;
+    color: var(--muted);
+    font-weight: 600;
+    pointer-events: none;
+}
+
 .checkbox-group {
     display: flex;
     flex-wrap: wrap;

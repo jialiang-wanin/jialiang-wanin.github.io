@@ -45,6 +45,18 @@ document.addEventListener('DOMContentLoaded', function () {
     if (openSiteDocDifficulty) {
         openSiteDocDifficulty.addEventListener('change', updateBaseScore);
     }
+
+    // 負責比例輸入驗證（只允許 1-100 整數）
+    const responsibilityRatio = document.getElementById('responsibilityRatio');
+    if (responsibilityRatio) {
+        responsibilityRatio.addEventListener('input', function () {
+            this.value = this.value.replace(/[^0-9]/g, '');
+            if ((parseInt(this.value) || 0) > 100) this.value = 100;
+        });
+        responsibilityRatio.addEventListener('blur', function () {
+            if (this.value === '' || parseInt(this.value) < 1) this.value = 1;
+        });
+    }
 });
 
 
@@ -211,12 +223,9 @@ function calculateScore() {
         }
     }
 
-    const communicationComplexity = unitNames.length;
-    if (communicationComplexity == 1 || communicationComplexity == 2) {
-        communicationComplexity == 1
-    }
-    console.log(`有效單位數量：${communicationComplexity}`);
-    console.log(`單位名稱：${unitNames.join(', ')}`);
+    // 單位溝通複雜度分級：1~2 單位→+1、3→+2、4→+3、5→+4（至少 1，之後每多 1 單位 +1）
+    const unitCount = unitNames.length;
+    const communicationComplexity = unitCount === 0 ? 0 : Math.max(1, unitCount - 1);
     totalComplexity += communicationComplexity;
 
     // 其他產品串聯
@@ -296,8 +305,19 @@ function calculateScore() {
                 基礎績效分 (${baseScore.toFixed(2)}) + 複雜度績效分 (${complexityScore.toFixed(2)}) = 專案基本分 ${totalBaseAndComplexity.toFixed(2)}
             `;
 
-    // 最終分數 = 專案基本分，無條件進位到小數第 2 位
-    const truncatedScore = ceilTo(totalBaseAndComplexity, 2);
+    // 步驟四：負責比例
+    const responsibilityRatioInput = document.getElementById('responsibilityRatio');
+    const responsibilityRatio = parseInt(responsibilityRatioInput.value) || 0;
+    if (responsibilityRatio < 1 || responsibilityRatio > 100) {
+        alert('請輸入有效的負責比例 (1-100%)');
+        responsibilityRatioInput.focus();
+        return;
+    }
+    const responsibilityRatioDecimal = responsibilityRatio / 100;
+
+    // 最終分數 = 專案基本分 × 負責比例，無條件進位到小數第 2 位
+    const finalScore = totalBaseAndComplexity * responsibilityRatioDecimal;
+    const truncatedScore = ceilTo(finalScore, 2);
 
     // 顯示結果
     document.getElementById('result').classList.remove('hidden');
@@ -325,9 +345,10 @@ function calculateScore() {
                             <li>複雜度總和：${totalComplexity}，對應績效分：${complexityScore.toFixed(2)}</li>
                         </ul>
                     </li>
-                    <li><strong>專案基本分（即最終分數）：</strong> ${baseScore.toFixed(2)} + ${complexityScore.toFixed(2)} = ${totalBaseAndComplexity.toFixed(2)}</li>
+                    <li><strong>專案基本分：</strong> ${baseScore.toFixed(2)} + ${complexityScore.toFixed(2)} = ${totalBaseAndComplexity.toFixed(2)}</li>
+                    <li><strong>負責比例：</strong> ×${responsibilityRatio}% (${responsibilityRatioDecimal.toFixed(2)})</li>
                 </ol>
-                <p><strong>最終分數：</strong> ${totalBaseAndComplexity.toFixed(2)} → 無條件進位至小數第 2 位 = <strong>${truncatedScore.toFixed(2)}</strong></p>
+                <p><strong>最終專案分數：</strong> ${totalBaseAndComplexity.toFixed(2)} × ${responsibilityRatioDecimal.toFixed(2)} = ${finalScore.toFixed(4)} → 無條件進位至小數第 2 位 = <strong>${truncatedScore.toFixed(2)}</strong></p>
             `;
 
     document.getElementById('breakdown').innerHTML = breakdownHTML;
