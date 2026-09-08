@@ -41,56 +41,9 @@ document.addEventListener('DOMContentLoaded', function () {
         mainDocDifficulty.addEventListener('change', updateBaseScore);
     }
 
-    // 【新增】開站文件篇幅變化監聽器
+    // 開站文件篇幅變化監聽器
     if (openSiteDocDifficulty) {
         openSiteDocDifficulty.addEventListener('change', updateBaseScore);
-    }
-
-    // 負責比率輸入驗證和限制
-    const responsibilityRatio = document.getElementById('responsibilityRatio');
-    if (responsibilityRatio) {
-        // 限制只能輸入數字
-        responsibilityRatio.addEventListener('keypress', function (e) {
-            // 只允許數字鍵和一些控制鍵
-            if (!/[0-9]/.test(e.key) && !['Backspace', 'Delete', 'Tab', 'ArrowLeft', 'ArrowRight'].includes(e.key)) {
-                e.preventDefault();
-            }
-        });
-
-        // 限制輸入範圍和格式
-        responsibilityRatio.addEventListener('input', function () {
-            // 移除所有非數字字符
-            this.value = this.value.replace(/[^0-9]/g, '');
-
-            let value = parseInt(this.value) || 0;
-
-            // 限制範圍 1-100
-            if (value > 100) {
-                this.value = 100;
-            } else if (value < 1 && this.value !== '') {
-                this.value = 1;
-            }
-        });
-
-        // 失去焦點時確保有值
-        responsibilityRatio.addEventListener('blur', function () {
-            if (this.value === '' || parseInt(this.value) < 1) {
-                this.value = 1;
-            }
-        });
-
-        // 防止貼上非數字內容
-        responsibilityRatio.addEventListener('paste', function (e) {
-            e.preventDefault();
-            const paste = (e.clipboardData || window.clipboardData).getData('text');
-            const numericValue = paste.replace(/[^0-9]/g, '');
-            if (numericValue) {
-                let value = parseInt(numericValue);
-                if (value > 100) value = 100;
-                if (value < 1) value = 1;
-                this.value = value;
-            }
-        });
     }
 });
 
@@ -214,7 +167,7 @@ function calculateScore() {
             return;
         }
         baseScore = parseFloat(mainDocDifficulty);
-    } // 【新增】開站文件計算邏輯
+    } // 開站文件計算邏輯
     else if (projectType === 'openSiteDoc') {
         const openSiteDocDifficulty = document.getElementById('openSiteDocDifficulty').value;
         if (!openSiteDocDifficulty) {
@@ -336,44 +289,15 @@ function calculateScore() {
                 複雜度績效分：${complexityScore.toFixed(2)}
             `;
 
-    // 步驟三：計算基本分
+    // 步驟三：計算專案基本分（＝最終分數）
     const totalBaseAndComplexity = baseScore + complexityScore;
     document.getElementById('baseResult').classList.remove('hidden');
     document.getElementById('baseResult').innerHTML = `
                 基礎績效分 (${baseScore.toFixed(2)}) + 複雜度績效分 (${complexityScore.toFixed(2)}) = 專案基本分 ${totalBaseAndComplexity.toFixed(2)}
             `;
 
-    // 步驟四：獲取權重
-    const positionWeight = parseFloat(document.getElementById('position').value) || 0;
-    if (positionWeight === 0) {
-        alert('請選擇職等');
-        return;
-    }
-
-    const yearsWeight = parseFloat(document.getElementById('yearsOfService').value) || 0;
-    if (yearsWeight === 0) {
-        alert('請選擇年資');
-        return;
-    }
-
-    const projectLeadWeight = parseFloat(document.getElementById('isProjectLead').value) || 1.0;
-
-    // 獲取負責比率
-    const responsibilityRatioInput = document.getElementById('responsibilityRatio');
-    const responsibilityRatio = parseInt(responsibilityRatioInput.value) || 0;
-
-    if (responsibilityRatio === 0 || responsibilityRatio < 1 || responsibilityRatio > 100) {
-        alert('請輸入有效的負責比率 (1-100%)');
-        responsibilityRatioInput.focus();
-        return;
-    }
-    const responsibilityRatioDecimal = responsibilityRatio / 100;
-
-    // 計算最終分數
-    const finalScore = totalBaseAndComplexity * responsibilityRatioDecimal * positionWeight * yearsWeight * projectLeadWeight;
-
-    // ✅ 使用 ceilTo() 來無條件進位到小數第 2 位
-    const truncatedScore = ceilTo(finalScore, 2);
+    // 最終分數 = 專案基本分，無條件進位到小數第 2 位
+    const truncatedScore = ceilTo(totalBaseAndComplexity, 2);
 
     // 顯示結果
     document.getElementById('result').classList.remove('hidden');
@@ -401,17 +325,9 @@ function calculateScore() {
                             <li>複雜度總和：${totalComplexity}，對應績效分：${complexityScore.toFixed(2)}</li>
                         </ul>
                     </li>
-                    <li><strong>專案基本分：</strong> ${baseScore.toFixed(2)} + ${complexityScore.toFixed(2)} = ${totalBaseAndComplexity.toFixed(2)}</li>
-                    <li><strong>應用權重：</strong>
-                        <ul>
-                            <li>負責比例：×${responsibilityRatio}% (${responsibilityRatioDecimal.toFixed(2)})</li>
-                            <li>職等績效權重：×${positionWeight.toFixed(2)}</li>
-                            <li>年資權重：×${yearsWeight.toFixed(2)}</li>
-                            <li>專業負責人權重：×${projectLeadWeight.toFixed(1)}</li>
-                        </ul>
-                    </li>
+                    <li><strong>專案基本分（即最終分數）：</strong> ${baseScore.toFixed(2)} + ${complexityScore.toFixed(2)} = ${totalBaseAndComplexity.toFixed(2)}</li>
                 </ol>
-                <p><strong>最終計算公式：</strong> ${totalBaseAndComplexity.toFixed(2)} × ${responsibilityRatioDecimal.toFixed(2)} × ${positionWeight.toFixed(2)} × ${yearsWeight.toFixed(2)} × ${projectLeadWeight.toFixed(1)}  = ${finalScore.toFixed(4)}</p>
+                <p><strong>最終分數：</strong> ${totalBaseAndComplexity.toFixed(2)} → 無條件進位至小數第 2 位 = <strong>${truncatedScore.toFixed(2)}</strong></p>
             `;
 
     document.getElementById('breakdown').innerHTML = breakdownHTML;
@@ -449,7 +365,7 @@ function updateBaseScore() {
             score = 0;
             description = '主功能文件 (請選擇難易度)';
         }
-    } // 【新增】開站文件顯示邏輯
+    } // 開站文件顯示邏輯
     else if (selectedValue === 'openSiteDoc') {
         const difficultyValue = openSiteDocDifficulty ? openSiteDocDifficulty.value : '';
         if (difficultyValue) {
@@ -472,7 +388,67 @@ function updateBaseScore() {
 
     baseScoreResult.innerHTML = `
         <strong>基礎績效分：${score.toFixed(2)}</strong><br>
-        <span style="color: #666; font-size: 0.9em;">${description}</span>
+        <span style="color: #64748b; font-size: 0.9em;">${description}</span>
     `;
     baseScoreResult.classList.remove('hidden');
+}
+
+// 將結果卡片轉成圖片並複製到剪貼簿（不支援時 fallback 為下載 PNG）
+async function copyResultImage() {
+    const result = document.getElementById('result');
+    const btn = result.querySelector('.copy-image-button');
+    const hint = document.getElementById('copyHint');
+    const originalText = btn.textContent;
+
+    if (typeof html2canvas === 'undefined') {
+        showHint(hint, '❌ 圖片產生元件尚未載入，請稍候再試');
+        return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = '產生圖片中…';
+
+    try {
+        const canvas = await html2canvas(result, {
+            backgroundColor: '#ffffff',
+            scale: 2,
+            // 截圖時排除按鈕列本身
+            ignoreElements: (el) => el.classList && el.classList.contains('result-actions')
+        });
+
+        canvas.toBlob(async (blob) => {
+            try {
+                if (!blob) throw new Error('blob 產生失敗');
+                if (navigator.clipboard && window.ClipboardItem) {
+                    await navigator.clipboard.write([new ClipboardItem({ 'image/png': blob })]);
+                    showHint(hint, '✅ 已複製到剪貼簿，可直接貼上！');
+                } else {
+                    throw new Error('此瀏覽器不支援複製圖片');
+                }
+            } catch (e) {
+                // fallback：改成下載 PNG
+                const projectName = document.getElementById('projectName').value.trim() || '專案分數';
+                const link = document.createElement('a');
+                link.download = `${projectName}.png`;
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+                showHint(hint, '⬇️ 此瀏覽器不支援複製圖片，已改為下載');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }
+        }, 'image/png');
+    } catch (e) {
+        showHint(hint, '❌ 產生圖片失敗：' + e.message);
+        btn.disabled = false;
+        btn.textContent = originalText;
+    }
+}
+
+function showHint(el, msg) {
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.remove('hidden');
+    clearTimeout(el._hintTimer);
+    el._hintTimer = setTimeout(() => el.classList.add('hidden'), 4000);
 }

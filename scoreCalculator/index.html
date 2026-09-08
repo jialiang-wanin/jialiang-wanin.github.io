@@ -17,8 +17,7 @@
             <ol>
                 <li>確定基礎績效分（優化或刪減、擴充、全新功能）</li>
                 <li>計算複雜度總和和對應的複雜度績效分</li>
-                <li>基礎績效分 + 複雜度績效分 = 專案基本分</li>
-                <li>專案基本分 × 職等權重 × 年資權重 × 專業負責人權重 × 負責比率 = 最終專案分數</li>
+                <li>基礎績效分 + 複雜度績效分 = 專案基本分（即最終分數）</li>
             </ol>
         </div>
 
@@ -97,7 +96,7 @@
                         </div>
                     </div>
                     <button type="button" class="add-unit-button" onclick="addUnit()">新增單位</button>
-                    <small style="display: block; margin-top: 5px; color: #666;">(總部企劃/server/營運等，需求方不計入，最多 5
+                    <small style="display: block; margin-top: 5px; color: #64748b;">(總部企劃/server/營運等，需求方不計入，最多 5
                         個單位)</small>
                 </div>
 
@@ -137,7 +136,7 @@
                         <option value="2">5-6個 (+2複雜度)</option>
                         <option value="3">7個或以上 (+3複雜度)</option>
                     </select>
-                    <small style="display: block; margin-top: 5px; color: #666;">(首頁/大廳/登入/聊天室/商城等，功能本身不計入)</small>
+                    <small style="display: block; margin-top: 5px; color: #64748b;">(首頁/大廳/登入/聊天室/商城等，功能本身不計入)</small>
                 </div>
 
                 <div class="form-group">
@@ -199,50 +198,8 @@
             <!-- 步驟三：基礎績效分 + 複雜度績效分 -->
             <div class="section">
                 <h3 class="section-title">步驟三：計算專案基本分</h3>
-                <p>基礎績效分 + 複雜度績效分 = 專案基本分</p>
+                <p>基礎績效分 + 複雜度績效分 = 專案基本分（即最終分數）</p>
                 <div id="baseResult" class="step-result hidden"></div>
-            </div>
-
-            <!-- 步驟四：權重計算 -->
-            <div class="section">
-                <h3 class="section-title">步驟四：應用權重</h3>
-
-                <div class="form-group">
-                    <label for="responsibilityRatio">負責比例：</label>
-                    <div class="responsibility-input">
-                        <input type="number" id="responsibilityRatio" min="1" max="100" value="100" required>
-                        <span class="percentage-symbol">%</span>
-                    </div>
-                    <small style="display: block; margin-top: 5px; color: #666;">請輸入您在此專案中的負責比例 (1-100%)</small>
-                </div>
-
-                <div class="form-group">
-                    <label for="position">職等：</label>
-                    <select id="position" required>
-                        <option value="">請選擇職等</option>
-                        <option value="1.0">實習生/助理 (×1.0)</option>
-                        <option value="0.85">企劃師 (×0.85)</option>
-                        <option value="0.7">資深以上 (×0.7)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="yearsOfService">年資：</label>
-                    <select id="yearsOfService" required>
-                        <option value="">請選擇年資</option>
-                        <option value="1.0">一年以下 (×1.0)</option>
-                        <option value="0.9">兩年以下 (×0.9)</option>
-                        <option value="0.85">超過兩年 (×0.85)</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label for="isProjectLead">是否為專業負責人：</label>
-                    <select id="isProjectLead" required>
-                        <option value="1.0">否 (×1.0)</option>
-                        <option value="1.2">是 (×1.2)</option>
-                    </select>
-                </div>
             </div>
 
             <button type="button" class="primary-button" onclick="calculateScore()">計算專案分數</button>
@@ -253,8 +210,13 @@
             <div id="projectNameResult" class="project-name"></div>
             <div id="scoreResult"></div>
             <div id="breakdown" class="breakdown"></div>
+            <div class="result-actions">
+                <button type="button" class="copy-image-button" onclick="copyResultImage()">📋 複製結果圖片</button>
+                <span id="copyHint" class="copy-hint hidden"></span>
+            </div>
         </div>
     </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
     <script src="script.js"></script>
 </body>
 
