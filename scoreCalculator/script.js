@@ -1,3 +1,29 @@
+// ============================================================
+// 模式切換：專案製作分 / 文件審閱分
+// ============================================================
+function switchMode(mode) {
+    const projectMode = document.getElementById('projectMode');
+    const reviewMode = document.getElementById('reviewMode');
+    const tabs = document.querySelectorAll('.mode-tab');
+
+    if (mode === 'review') {
+        projectMode.classList.add('hidden');
+        reviewMode.classList.remove('hidden');
+    } else {
+        reviewMode.classList.add('hidden');
+        projectMode.classList.remove('hidden');
+    }
+
+    tabs.forEach(tab => {
+        tab.classList.toggle('active', tab.dataset.mode === mode);
+    });
+}
+
+
+// ============================================================
+// 【專案製作分】邏輯
+// ============================================================
+
 // 根據複雜度等級獲取對應的績效分
 function getComplexityScore(level) {
     if (level <= 0) return 0;
@@ -230,7 +256,7 @@ function calculateScore() {
 
     // 其他產品串聯
     let productLinkComplexity = 0;
-    const productLinks = document.querySelectorAll('.checkbox-group input[type="checkbox"]:checked');
+    const productLinks = document.querySelectorAll('#calculatorForm .checkbox-group input[type="checkbox"]:checked');
     productLinks.forEach(link => {
         productLinkComplexity += parseInt(link.value) || 0;
     });
@@ -414,12 +440,124 @@ function updateBaseScore() {
     baseScoreResult.classList.remove('hidden');
 }
 
+
+// ============================================================
+// 【文件審閱分】邏輯（單關）
+// ============================================================
+
+// 輔助函數：無條件進位至小數點第二位
+function ceilToTwo(num) {
+    return Math.ceil(num * 100) / 100;
+}
+
+// 核心計算函數（審閱分）
+function reviewCalculateScore() {
+    // 檢查專案名稱必填
+    const projectName = document.getElementById('rv_projectName').value.trim();
+    if (!projectName) {
+        alert('請輸入「專案名稱」！');
+        document.getElementById('rv_projectName').focus();
+        return;
+    }
+
+    // 1. 基礎績效分（易 0.02 / 中 0.03 / 難 0.04）
+    const baseScore = parseFloat(document.getElementById('l1_base').value);
+
+    // 2. 複雜度等級計算（從 0 開始）
+    let complexityLevel = 0;
+    let details = [];
+
+    // 來回檢視
+    const retryCount = parseInt(document.getElementById('l1_retryCount').value) || 0;
+    if (retryCount >= 3) {
+        complexityLevel += 1;
+        details.push(`來回檢視 ${retryCount} 次 (+1級)`);
+    }
+
+    // 產品串聯
+    const prodChecks = document.querySelectorAll('.l1-prod:checked');
+    if (prodChecks.length > 0) {
+        complexityLevel += prodChecks.length;
+        details.push(`產品串聯 ${prodChecks.length} 項 (+${prodChecks.length}級)`);
+    }
+
+    // 連動功能
+    const featVal = parseInt(document.getElementById('l1_features').value);
+    if (featVal > 0) {
+        complexityLevel += featVal;
+        details.push(`連動功能加權 (+${featVal}級)`);
+    }
+
+    // 新字串
+    const strVal = parseInt(document.getElementById('l1_strings').value);
+    if (strVal > 0) {
+        complexityLevel += strVal;
+        details.push(`新字串量加權 (+${strVal}級)`);
+    }
+
+    // 額外複雜度驗證邏輯
+    const extra = parseInt(document.getElementById('l1_extra').value) || 0;
+    const extraReason = document.getElementById('l1_extra_reason').value.trim();
+    if (extra > 0) {
+        if (!extraReason) {
+            alert('請輸入「額外複雜度」的加分原因！');
+            document.getElementById('l1_extra_reason').focus();
+            return;
+        }
+        complexityLevel += extra;
+        details.push(`${extraReason} (+${extra}級)`);
+    }
+
+    // 3. 複雜度分數查表
+    let complexityScore = 0;
+    if (complexityLevel <= 0) complexityScore = 0; // Level 0 = 0分
+    else if (complexityLevel === 1) complexityScore = 0.01;
+    else if (complexityLevel === 2) complexityScore = 0.02;
+    else if (complexityLevel === 3) complexityScore = 0.03;
+    else if (complexityLevel === 4) complexityScore = 0.05;
+    else if (complexityLevel === 5) complexityScore = 0.07;
+    else complexityScore = 0.07 + (complexityLevel - 5) * 0.02; // 5+ 每級 +0.02
+
+    // 4. 開站文件係數
+    const isOpenSite = document.getElementById('isOpenSite').checked ? 0.9 : 1.0;
+
+    // 5. 最終公式：(基礎 + 複雜度) × 開站文件係數，無條件進位至小數第 2 位
+    const rawScore = (baseScore + complexityScore) * isOpenSite;
+    const finalScore = ceilToTwo(rawScore);
+
+    const breakdownHTML = `
+        <p><strong>計算過程：</strong></p>
+        <ul>
+            <li><strong>基礎績效分：</strong> ${baseScore}</li>
+            <li><strong>複雜度等級：</strong> Level ${complexityLevel}
+                <br><small style="color:#666">(${details.length > 0 ? details.join(', ') : '無額外加權'})</small>
+            </li>
+            <li><strong>複雜度績效分：</strong> ${complexityScore.toFixed(2)}</li>
+            <li><strong>開站文件係數：</strong> x${isOpenSite}</li>
+            <li><strong>公式：</strong> (${baseScore} + ${complexityScore.toFixed(2)}) × ${isOpenSite} = ${rawScore.toFixed(4)}</li>
+        </ul>
+    `;
+
+    // 顯示結果
+    document.getElementById('rv_result').classList.remove('hidden');
+    document.getElementById('rv_projectNameResult').innerHTML = `專案名稱：${projectName}`;
+    document.getElementById('rv_scoreResult').innerHTML = `<strong>最終審閱分數：${finalScore.toFixed(2)}</strong>`;
+    document.getElementById('rv_breakdown').innerHTML = breakdownHTML;
+}
+
+
+// ============================================================
+// 【共用】複製結果圖片（兩種模式共用）
+// ============================================================
+
 // 將結果卡片轉成圖片並複製到剪貼簿（不支援時 fallback 為下載 PNG）
-async function copyResultImage() {
-    const result = document.getElementById('result');
+async function copyResultImage(resultId = 'result', hintId = 'copyHint') {
+    const result = document.getElementById(resultId);
     const btn = result.querySelector('.copy-image-button');
-    const hint = document.getElementById('copyHint');
+    const hint = document.getElementById(hintId);
     const originalText = btn.textContent;
+    // 依模式取對應的專案名稱輸入框，作為下載檔名
+    const nameId = resultId === 'result' ? 'projectName' : 'rv_projectName';
 
     if (typeof html2canvas === 'undefined') {
         showHint(hint, '❌ 圖片產生元件尚未載入，請稍候再試');
@@ -448,7 +586,7 @@ async function copyResultImage() {
                 }
             } catch (e) {
                 // fallback：改成下載 PNG
-                const projectName = document.getElementById('projectName').value.trim() || '專案分數';
+                const projectName = (document.getElementById(nameId).value.trim()) || '績效分';
                 const link = document.createElement('a');
                 link.download = `${projectName}.png`;
                 link.href = canvas.toDataURL('image/png');

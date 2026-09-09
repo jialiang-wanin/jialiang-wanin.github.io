@@ -110,7 +110,7 @@ input:disabled {
     display: flex;
     align-items: center;
     position: relative;
-    max-width: 140px;
+    max-width: 96px;
 }
 
 .responsibility-input input[type="number"] {
@@ -480,4 +480,198 @@ th {
         align-self: center;
         min-width: 80px;
     }
+}
+
+
+/* ==================== 模式切換 ==================== */
+.mode-switch {
+    display: flex;
+    gap: 8px;
+    background: var(--primary-soft);
+    padding: 6px;
+    border-radius: 12px;
+    margin-bottom: 22px;
+}
+
+.mode-tab {
+    flex: 1;
+    padding: 12px 10px;
+    border: none;
+    border-radius: 8px;
+    background: transparent;
+    color: var(--muted);
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.15s, color 0.15s, box-shadow 0.15s;
+}
+
+.mode-tab:hover {
+    color: var(--primary);
+}
+
+.mode-tab.active {
+    background: var(--card);
+    color: var(--primary);
+    box-shadow: 0 2px 6px -2px rgba(30, 41, 59, 0.25);
+}
+
+/* 版本但書 */
+.version-note {
+    margin: 12px 0 0;
+    font-size: 0.85rem;
+    color: var(--muted);
+}
+
+/* checkbox 選中態 */
+.checkbox-item:has(input:checked) {
+    border-color: var(--primary);
+    background: var(--primary-soft);
+    color: var(--primary);
+    font-weight: 600;
+}
+
+/* 審閱結果大字（同專案模式呈現） */
+#rv_scoreResult {
+    font-size: 1.3rem;
+    color: var(--ink);
+    margin-bottom: 6px;
+}
+
+
+/* ==================== 審閱模式專屬元件 ==================== */
+
+/* 額外複雜度加權（審閱） */
+.rv-extra-complexity {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    margin-top: 15px;
+    gap: 10px;
+    background-color: var(--primary-soft);
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #c7d2fe;
+}
+
+.rv-extra-complexity .extra-label {
+    font-weight: 700;
+    color: var(--primary);
+    min-width: 120px;
+}
+
+.rv-extra-complexity .reason-input {
+    flex-grow: 1;
+    min-width: 200px;
+}
+
+.score-input-group {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+}
+
+.score-input-group input[type="number"] {
+    width: 64px;
+    text-align: center;
+}
+
+/* 審閱第 1/2 關的數字輸入（來回檢視次數等）避免撐滿 */
+.custom-item input[type="number"] {
+    width: 100px;
+}
+
+/* 動態錯誤清單 */
+.error-management-group {
+    background-color: #fff;
+    border: 1px solid var(--line);
+    padding: 15px;
+    border-radius: 10px;
+}
+
+.error-controls {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.error-controls select {
+    flex-grow: 1;
+}
+
+.add-btn {
+    background-color: var(--primary);
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-weight: 600;
+}
+
+.add-btn:hover {
+    background-color: var(--primary-hover);
+}
+
+.error-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px;
+    background-color: #f8fafc;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    animation: fadeIn 0.3s ease;
+}
+
+.error-row.major-error {
+    background-color: #fef2f2;
+    border-color: #fecaca;
+}
+
+.error-tag {
+    font-size: 0.85em;
+    padding: 4px 8px;
+    border-radius: 6px;
+    white-space: nowrap;
+    font-weight: bold;
+}
+
+.tag-minor {
+    background-color: var(--primary-soft);
+    color: var(--primary);
+}
+
+.tag-major {
+    background-color: #fee2e2;
+    color: #c62828;
+}
+
+.error-desc-input {
+    flex-grow: 1;
+}
+
+.remove-btn {
+    background-color: transparent;
+    border: 1px solid #ef4444;
+    color: #ef4444;
+    border-radius: 6px;
+    padding: 6px 10px;
+    cursor: pointer;
+    font-size: 0.85em;
+    white-space: nowrap;
+    width: auto;
+}
+
+.remove-btn:hover {
+    background-color: #ef4444;
+    color: white;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
 }

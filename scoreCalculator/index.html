@@ -4,230 +4,353 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>專案分數計算器</title>
+    <title>績效計算器</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
     <div class="calculator">
-        <h1>專案分數計算器</h1>
+        <h1>績效計算器</h1>
 
-        <div class="info-section">
-            <h2>計算流程</h2>
-            <ol>
-                <li>確定基礎績效分（優化或刪減、擴充、全新功能）</li>
-                <li>計算複雜度總和和對應的複雜度績效分</li>
-                <li>基礎績效分 + 複雜度績效分 = 專案基本分</li>
-                <li>專案基本分 × 負責比例 = 最終專案分數</li>
-            </ol>
-            <p style="margin: 12px 0 0; font-size: 0.85rem; color: #64748b;">＊本計算機之計分規則依據 2026 / 9 版績效標準</p>
+        <!-- 模式切換 -->
+        <div class="mode-switch">
+            <button type="button" class="mode-tab active" data-mode="project" onclick="switchMode('project')">專案製作分</button>
+            <button type="button" class="mode-tab" data-mode="review" onclick="switchMode('review')">文件審閱分</button>
         </div>
 
-        <form id="calculatorForm">
-            <!-- 專案名稱 -->
-            <div class="section">
-                <h3 class="section-title">專案資訊</h3>
-                <div class="form-group">
-                    <label for="projectName">專案名稱：</label>
-                    <input type="text" id="projectName" placeholder="請輸入專案名稱" required>
-                </div>
+        <!-- ==================== 專案製作分模式 ==================== -->
+        <div id="projectMode">
+            <div class="info-section">
+                <h2>計分說明</h2>
+                <ol>
+                    <li>確定基礎績效分（優化或刪減、擴充、全新功能）</li>
+                    <li>計算複雜度總和和對應的複雜度績效分</li>
+                    <li>基礎績效分 + 複雜度績效分 = 專案基本分</li>
+                    <li>專案基本分 × 負責比例 = 最終專案分數</li>
+                </ol>
+                <p class="version-note">＊本計算機之計分規則依據 2026 / 9 版績效標準</p>
             </div>
 
-            <!-- 步驟一：基礎績效分 -->
-            <div class="section">
-                <h3 class="section-title">步驟一：選擇基礎績效分</h3>
-                <div class="form-group">
-                    <label for="projectType">功能專案文件基礎績效分：</label>
-                    <select id="projectType" required>
-                        <option value="">請選擇專案類型</option>
-                        <option value="0.02">協助開卡(eg.色票) (0.02)</option>
-                        <option value="json">JSON相關(開卡請系統協助上傳)</option>
-                        <option value="mainDoc">新功能回補主功能文件</option>
-                        <option value="openSiteDoc">開站文件</option>
-                        <option value="0.05">優化或刪減 (0.05)</option>
-                        <option value="0.1">擴充 (0.1)</option>
-                        <option value="0.3">全新功能 (0.3)</option>
-                    </select>
+            <form id="calculatorForm">
+                <!-- 專案名稱 -->
+                <div class="section">
+                    <h3 class="section-title">專案資訊</h3>
+                    <div class="form-group">
+                        <label for="projectName">專案名稱：</label>
+                        <input type="text" id="projectName" placeholder="請輸入專案名稱" required>
+                    </div>
                 </div>
-                <!-- JSON 相關的滑動條區域 -->
-                <div id="jsonSliderContainer" class="form-group hidden">
-                    <label for="jsonSlider">JSON 相關分數調整：</label>
-                    <div class="slider-container">
-                        <input type="range" id="jsonSlider" min="0.03" max="0.07" step="0.01" value="0.05">
-                        <div class="slider-value">
-                            <span id="jsonSliderValue">0.05</span>
+
+                <!-- 步驟一：基礎績效分 -->
+                <div class="section">
+                    <h3 class="section-title">步驟一：選擇基礎績效分</h3>
+                    <div class="form-group">
+                        <label for="projectType">功能專案文件基礎績效分：</label>
+                        <select id="projectType" required>
+                            <option value="">請選擇專案類型</option>
+                            <option value="0.02">協助開卡(eg.色票) (0.02)</option>
+                            <option value="json">JSON相關(開卡請系統協助上傳)</option>
+                            <option value="mainDoc">新功能回補主功能文件</option>
+                            <option value="openSiteDoc">開站文件</option>
+                            <option value="0.05">優化或刪減 (0.05)</option>
+                            <option value="0.1">擴充 (0.1)</option>
+                            <option value="0.3">全新功能 (0.3)</option>
+                        </select>
+                    </div>
+                    <!-- JSON 相關的滑動條區域 -->
+                    <div id="jsonSliderContainer" class="form-group hidden">
+                        <label for="jsonSlider">JSON 相關分數調整：</label>
+                        <div class="slider-container">
+                            <input type="range" id="jsonSlider" min="0.03" max="0.07" step="0.01" value="0.05">
+                            <div class="slider-value">
+                                <span id="jsonSliderValue">0.05</span>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- 主功能文件難易度選擇區塊 -->
+                    <div id="mainDocContainer" class="form-group hidden">
+                        <label for="mainDocDifficulty">新功能回補主功能文件難易度：</label>
+                        <select id="mainDocDifficulty" required>
+                            <option value="">請選擇難易度</option>
+                            <option value="0.02">易 (0.02)</option>
+                            <option value="0.03">中 (0.03)</option>
+                            <option value="0.04">難 (0.04)</option>
+                        </select>
+                    </div>
+
+                    <div id="baseScoreResult" class="step-result hidden"></div>
+
+                    <div id="openSiteDocContainer" class="form-group hidden">
+                        <label for="openSiteDocDifficulty">開站文件篇幅：</label>
+                        <select id="openSiteDocDifficulty" required>
+                            <option value="">請選擇篇幅</option>
+                            <option value="0.03">篇幅少 (懸浮項目、錯誤頁) (0.03)</option>
+                            <option value="0.04">篇幅中等 (遊戲大廳、檢舉) (0.04)</option>
+                            <option value="0.05">篇幅長 (公會、遊戲館狀態) (0.05)</option>
+                        </select>
+                    </div>
                 </div>
 
-                <!-- 主功能文件難易度選擇區塊 -->
-                <div id="mainDocContainer" class="form-group hidden">
-                    <label for="mainDocDifficulty">新功能回補主功能文件難易度：</label>
-                    <select id="mainDocDifficulty" required>
-                        <option value="">請選擇難易度</option>
-                        <option value="0.02">易 (0.02)</option>
-                        <option value="0.03">中 (0.03)</option>
-                        <option value="0.04">難 (0.04)</option>
-                    </select>
-                </div>
 
-                <div id="baseScoreResult" class="step-result hidden"></div>
-
-                <div id="openSiteDocContainer" class="form-group hidden">
-                    <label for="openSiteDocDifficulty">開站文件篇幅：</label>
-                    <select id="openSiteDocDifficulty" required>
-                        <option value="">請選擇篇幅</option>
-                        <option value="0.03">篇幅少 (懸浮項目、錯誤頁) (0.03)</option>
-                        <option value="0.04">篇幅中等 (遊戲大廳、檢舉) (0.04)</option>
-                        <option value="0.05">篇幅長 (公會、遊戲館狀態) (0.05)</option>
-                    </select>
-                </div>
-            </div>
+                <!-- 步驟二：複雜度計算 -->
+                <div class="section">
+                    <h3 class="section-title">步驟二：計算複雜度</h3>
+                    <div class="form-group">
+                        <label>有無平台處以外單位溝通：</label>
+                        <div id="unitContainer">
+                            <div class="unit-input">
+                                <input type="text" class="unit-name" placeholder="請輸入單位名稱">
+                                <button type="button" class="remove-unit secondary-button"
+                                    onclick="removeUnit(this)">刪除</button>
+                            </div>
+                        </div>
+                        <button type="button" class="add-unit-button" onclick="addUnit()">新增單位</button>
+                        <small style="display: block; margin-top: 5px; color: #64748b;">(總部企劃/server/營運等，需求方不計入，最多 5
+                            個單位)</small>
+                    </div>
 
 
-            <!-- 步驟二：複雜度計算 -->
-            <div class="section">
-                <h3 class="section-title">步驟二：計算複雜度</h3>
-                <div class="form-group">
-                    <label>有無平台處以外單位溝通：</label>
-                    <div id="unitContainer">
-                        <div class="unit-input">
-                            <input type="text" class="unit-name" placeholder="請輸入單位名稱">
-                            <button type="button" class="remove-unit secondary-button"
-                                onclick="removeUnit(this)">刪除</button>
+
+                    <div class="form-group">
+                        <label>有無其他產品串聯：(每項+1複雜度)</label>
+                        <div class="checkbox-group">
+                            <div class="checkbox-item"><input type="checkbox" id="appLink" value="1"><label
+                                    for="appLink">APP</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="mahjongLink" value="1"><label
+                                    for="mahjongLink">麻將</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="fogLink" value="1"><label
+                                    for="fogLink">FOG</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="gashLink" value="1"><label
+                                    for="gashLink">GASH</label></div>
+                            <div class="checkbox-item"><input type="checkbox" id="thirdPartyLink" value="1"><label
+                                    for="thirdPartyLink">第三方登入</label></div>
+                        </div>
+                        <div class="custom-item">
+                            <input type="checkbox" id="customLink1" value="1">
+                            <label for="customLink1">其他1:</label>
+                            <input type="text" id="customLink1Text" placeholder="輸入產品名稱">
+                        </div>
+                        <div class="custom-item">
+                            <input type="checkbox" id="customLink2" value="1">
+                            <label for="customLink2">其他2:</label>
+                            <input type="text" id="customLink2Text" placeholder="輸入產品名稱">
                         </div>
                     </div>
-                    <button type="button" class="add-unit-button" onclick="addUnit()">新增單位</button>
-                    <small style="display: block; margin-top: 5px; color: #64748b;">(總部企劃/server/營運等，需求方不計入，最多 5
-                        個單位)</small>
-                </div>
 
-
-
-                <div class="form-group">
-                    <label>有無其他產品串聯：(每項+1複雜度)</label>
-                    <div class="checkbox-group">
-                        <div class="checkbox-item"><input type="checkbox" id="appLink" value="1"><label
-                                for="appLink">APP</label></div>
-                        <div class="checkbox-item"><input type="checkbox" id="mahjongLink" value="1"><label
-                                for="mahjongLink">麻將</label></div>
-                        <div class="checkbox-item"><input type="checkbox" id="fogLink" value="1"><label
-                                for="fogLink">FOG</label></div>
-                        <div class="checkbox-item"><input type="checkbox" id="gashLink" value="1"><label
-                                for="gashLink">GASH</label></div>
-                        <div class="checkbox-item"><input type="checkbox" id="thirdPartyLink" value="1"><label
-                                for="thirdPartyLink">第三方登入</label></div>
+                    <div class="form-group">
+                        <label for="connectedFeatures">連動功能數量：</label>
+                        <select id="connectedFeatures">
+                            <option value="0">少於3個</option>
+                            <option value="1">3-4個 (+1複雜度)</option>
+                            <option value="2">5-6個 (+2複雜度)</option>
+                            <option value="3">7個或以上 (+3複雜度)</option>
+                        </select>
+                        <small style="display: block; margin-top: 5px; color: #64748b;">(首頁/大廳/登入/聊天室/商城等，功能本身不計入)</small>
                     </div>
-                    <div class="custom-item">
-                        <input type="checkbox" id="customLink1" value="1">
-                        <label for="customLink1">其他1:</label>
-                        <input type="text" id="customLink1Text" placeholder="輸入產品名稱">
+
+                    <div class="form-group">
+                        <label for="newStrings">新字串量：</label>
+                        <select id="newStrings">
+                            <option value="0">少於20個</option>
+                            <option value="1">20-34個 (+1複雜度)</option>
+                            <option value="2">35-49個 (+2複雜度)</option>
+                            <option value="3">50個或以上 (+3複雜度)</option>
+                        </select>
                     </div>
-                    <div class="custom-item">
-                        <input type="checkbox" id="customLink2" value="1">
-                        <label for="customLink2">其他2:</label>
-                        <input type="text" id="customLink2Text" placeholder="輸入產品名稱">
+                    <div class="form-group">
+                        <label for="extraComplexity">額外複雜度判定：(考量量體等相關變因)</label>
+                        <div class="extra-complexity">
+                            <span>+</span>
+                            <input type="number" id="extraComplexity" min="0" max="10" value="0" step="1">
+                            <span>複雜度，原因：</span>
+                            <input type="text" id="extraComplexityReason" placeholder="請輸入額外複雜度的原因">
+                        </div>
+                    </div>
+
+                    <div id="complexityResult" class="step-result hidden"></div>
+
+                    <div class="complexity-table">
+                        <h4>複雜度對應績效分對照表：</h4>
+                        <table>
+                            <tr>
+                                <th>複雜度</th>
+                                <td>1</td>
+                                <td>2</td>
+                                <td>3</td>
+                                <td>4</td>
+                                <td>5</td>
+                                <td>6</td>
+                                <td>7</td>
+                                <td>8</td>
+                                <td>9</td>
+                                <td>10</td>
+                                <td>10+</td>
+                            </tr>
+                            <tr>
+                                <th>績效分</th>
+                                <td>0.02</td>
+                                <td>0.06</td>
+                                <td>0.1</td>
+                                <td>0.15</td>
+                                <td>0.23</td>
+                                <td>0.35</td>
+                                <td>0.5</td>
+                                <td>0.7</td>
+                                <td>0.9</td>
+                                <td>1.1</td>
+                                <td>每級+0.2</td>
+                            </tr>
+                        </table>
                     </div>
                 </div>
 
-                <div class="form-group">
-                    <label for="connectedFeatures">連動功能數量：</label>
-                    <select id="connectedFeatures">
-                        <option value="0">少於3個</option>
-                        <option value="1">3-4個 (+1複雜度)</option>
-                        <option value="2">5-6個 (+2複雜度)</option>
-                        <option value="3">7個或以上 (+3複雜度)</option>
-                    </select>
-                    <small style="display: block; margin-top: 5px; color: #64748b;">(首頁/大廳/登入/聊天室/商城等，功能本身不計入)</small>
+                <!-- 步驟三：基礎績效分 + 複雜度績效分 -->
+                <div class="section">
+                    <h3 class="section-title">步驟三：計算專案基本分</h3>
+                    <p>基礎績效分 + 複雜度績效分 = 專案基本分</p>
+                    <div id="baseResult" class="step-result hidden"></div>
                 </div>
 
-                <div class="form-group">
-                    <label for="newStrings">新字串量：</label>
-                    <select id="newStrings">
-                        <option value="0">少於20個</option>
-                        <option value="1">20-34個 (+1複雜度)</option>
-                        <option value="2">35-49個 (+2複雜度)</option>
-                        <option value="3">50個或以上 (+3複雜度)</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="extraComplexity">額外複雜度判定：(考量量體等相關變因)</label>
-                    <div class="extra-complexity">
-                        <span>+</span>
-                        <input type="number" id="extraComplexity" min="0" max="10" value="0" step="1">
-                        <span>複雜度，原因：</span>
-                        <input type="text" id="extraComplexityReason" placeholder="請輸入額外複雜度的原因">
+                <!-- 步驟四：負責比例 -->
+                <div class="section">
+                    <h3 class="section-title">步驟四：套用負責比例</h3>
+                    <div class="form-group">
+                        <label for="responsibilityRatio">負責比例：</label>
+                        <div class="responsibility-input">
+                            <input type="number" id="responsibilityRatio" min="1" max="100" value="100" required>
+                            <span class="percentage-symbol">%</span>
+                        </div>
+                        <small style="display: block; margin-top: 5px; color: #64748b;">專案基本分 × 負責比例 = 最終專案分數（請輸入 1-100%）</small>
                     </div>
                 </div>
 
-                <div id="complexityResult" class="step-result hidden"></div>
+                <button type="button" class="primary-button" onclick="calculateScore()">計算專案分數</button>
+            </form>
 
-                <div class="complexity-table">
-                    <h4>複雜度對應績效分對照表：</h4>
-                    <table>
-                        <tr>
-                            <th>複雜度</th>
-                            <td>1</td>
-                            <td>2</td>
-                            <td>3</td>
-                            <td>4</td>
-                            <td>5</td>
-                            <td>6</td>
-                            <td>7</td>
-                            <td>8</td>
-                            <td>9</td>
-                            <td>10</td>
-                            <td>10+</td>
-                        </tr>
-                        <tr>
-                            <th>績效分</th>
-                            <td>0.02</td>
-                            <td>0.06</td>
-                            <td>0.1</td>
-                            <td>0.15</td>
-                            <td>0.23</td>
-                            <td>0.35</td>
-                            <td>0.5</td>
-                            <td>0.7</td>
-                            <td>0.9</td>
-                            <td>1.1</td>
-                            <td>每級+0.2</td>
-                        </tr>
-                    </table>
+            <div id="result" class="result hidden">
+                <h3>最終計算結果</h3>
+                <div id="projectNameResult" class="project-name"></div>
+                <div id="scoreResult"></div>
+                <div id="breakdown" class="breakdown"></div>
+                <div class="result-actions">
+                    <button type="button" class="copy-image-button" onclick="copyResultImage('result', 'copyHint')">📋 複製結果圖片</button>
+                    <span id="copyHint" class="copy-hint hidden"></span>
                 </div>
             </div>
+        </div>
 
-            <!-- 步驟三：基礎績效分 + 複雜度績效分 -->
-            <div class="section">
-                <h3 class="section-title">步驟三：計算專案基本分</h3>
-                <p>基礎績效分 + 複雜度績效分 = 專案基本分</p>
-                <div id="baseResult" class="step-result hidden"></div>
+        <!-- ==================== 文件審閱分模式 ==================== -->
+        <div id="reviewMode" class="hidden">
+            <div class="info-section">
+                <h2>計分說明</h2>
+                <ol>
+                    <li>依難易度選擇基礎績效分（易 0.02／中 0.03／難 0.04）</li>
+                    <li>計算複雜度加權（來回檢視、產品串聯、連動功能、新字串量）</li>
+                    <li>對照複雜度等級換算複雜度績效分</li>
+                    <li>（基礎績效分 + 複雜度績效分）× 開站文件係數 = 最終審閱分數</li>
+                    <li>最終分數無條件進位至小數點第二位</li>
+                </ol>
+                <p class="version-note">＊本計算機之計分規則依據 2026 / 9 版績效標準</p>
             </div>
 
-            <!-- 步驟四：負責比例 -->
-            <div class="section">
-                <h3 class="section-title">步驟四：套用負責比例</h3>
-                <div class="form-group">
-                    <label for="responsibilityRatio">負責比例：</label>
-                    <div class="responsibility-input">
-                        <input type="number" id="responsibilityRatio" min="1" max="100" value="100" required>
-                        <span class="percentage-symbol">%</span>
+            <form id="reviewForm">
+                <!-- 專案資訊 -->
+                <div class="section">
+                    <h3 class="section-title">審閱資訊</h3>
+                    <div class="form-group">
+                        <label for="rv_projectName">專案名稱 <span style="color: red;">*</span>：</label>
+                        <input type="text" id="rv_projectName" placeholder="請輸入專案名稱 (必填)">
                     </div>
-                    <small style="display: block; margin-top: 5px; color: #64748b;">專案基本分 × 負責比例 = 最終專案分數（請輸入 1-100%）</small>
                 </div>
-            </div>
 
-            <button type="button" class="primary-button" onclick="calculateScore()">計算專案分數</button>
-        </form>
+                <!-- 步驟一：基礎績效分 -->
+                <div class="section">
+                    <h3 class="section-title">步驟一：選擇基礎績效分</h3>
+                    <div class="form-group">
+                        <label for="l1_base">審閱基礎績效分 (易/中/難)：</label>
+                        <select id="l1_base">
+                            <option value="0.02">易 (0.02)</option>
+                            <option value="0.03">中 (0.03)</option>
+                            <option value="0.04">難 (0.04)</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>開站文件設定：</label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="isOpenSite">
+                            <span>是否為開站文件 (x0.9)</span>
+                        </label>
+                    </div>
+                </div>
 
-        <div id="result" class="result hidden">
-            <h3>最終計算結果</h3>
-            <div id="projectNameResult" class="project-name"></div>
-            <div id="scoreResult"></div>
-            <div id="breakdown" class="breakdown"></div>
-            <div class="result-actions">
-                <button type="button" class="copy-image-button" onclick="copyResultImage()">📋 複製結果圖片</button>
-                <span id="copyHint" class="copy-hint hidden"></span>
+                <!-- 步驟二：複雜度加權 -->
+                <div class="section">
+                    <h3 class="section-title">步驟二：複雜度加權</h3>
+
+                    <div class="form-group">
+                        <label>複雜度加權項目 ：</label>
+
+                        <div class="custom-item">
+                            <label>來回檢視次數：</label>
+                            <input type="number" id="l1_retryCount" min="0" value="0" placeholder="次數">
+                            <span>(3次以上 +1級)</span>
+                        </div>
+
+                        <div class="checkbox-group" style="margin-top:15px; border-top:1px dashed #ddd; padding-top:10px;">
+                            <label style="width:100%;">其他產品串聯 (每項 +1級)：</label>
+                            <label class="checkbox-item"><input type="checkbox" class="l1-prod" value="1"> APP</label>
+                            <label class="checkbox-item"><input type="checkbox" class="l1-prod" value="1"> 麻將</label>
+                            <label class="checkbox-item"><input type="checkbox" class="l1-prod" value="1"> FOG</label>
+                            <label class="checkbox-item"><input type="checkbox" class="l1-prod" value="1"> GASH</label>
+                            <label class="checkbox-item"><input type="checkbox" class="l1-prod" value="1"> 第三方登入</label>
+                        </div>
+
+                        <div style="margin-top:15px;">
+                            <label for="l1_features">連動功能數量 (首頁/大廳/登入等)：</label>
+                            <select id="l1_features">
+                                <option value="0">少於 3 個</option>
+                                <option value="1">3~4 個 (+1級)</option>
+                                <option value="2">5~6 個 (+2級)</option>
+                                <option value="3">7 個以上 (+3級)</option>
+                            </select>
+                        </div>
+
+                        <div style="margin-top:15px;">
+                            <label for="l1_strings">新字串量：</label>
+                            <select id="l1_strings">
+                                <option value="0">少於 20 個</option>
+                                <option value="1">20~34 個 (+1級)</option>
+                                <option value="2">35~49 個 (+2級)</option>
+                                <option value="3">50 個以上 (+3級)</option>
+                            </select>
+                        </div>
+
+                        <div class="rv-extra-complexity">
+                            <div class="extra-label">額外複雜度加權：</div>
+                            <input type="text" id="l1_extra_reason" class="reason-input" placeholder="請輸入加分原因 (必填)">
+                            <div class="score-input-group">
+                                <span>+</span>
+                                <input type="number" id="l1_extra" min="0" value="0">
+                                <span>級</span>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <button type="button" class="primary-button" onclick="reviewCalculateScore()">計算分數</button>
+            </form>
+
+            <div id="rv_result" class="result hidden">
+                <h3>計算結果</h3>
+                <div id="rv_projectNameResult" class="project-name"></div>
+                <div id="rv_scoreResult"></div>
+                <div id="rv_breakdown" class="breakdown"></div>
+                <div class="result-actions">
+                    <button type="button" class="copy-image-button" onclick="copyResultImage('rv_result', 'rv_copyHint')">📋 複製結果圖片</button>
+                    <span id="rv_copyHint" class="copy-hint hidden"></span>
+                </div>
             </div>
         </div>
     </div>
